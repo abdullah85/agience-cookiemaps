@@ -9,6 +9,7 @@ use_random_values = False
 move_amount_high = 1  # Variable to control the amount the coins move by when high
 move_amount_normal = 3  # Variable to control the amount the coins move by when normal
 
+# Add more documentation
 # Assign a bias category to each cryptocurrency
 for crypto in cryptocurrencies:
     crypto['bias'] = random.choice(['mindshare', 'marketCap', 'liquidity', 'price', 'averageEngagementsCount'])
