@@ -35,7 +35,7 @@ function showDetails(crypto) {
 function updateDetails() {
     if (selectedCrypto) {
         details.innerHTML = `
-            <h2>${selectedCrypto.name}</h2>
+            <h2>${selectedCrypto.agentName}</h2>
             <p>Mindshare: ${selectedCrypto.mindshare}</p>
             <p>Market Cap: ${selectedCrypto.marketCap}</p>
             <p>Liquidity: ${selectedCrypto.liquidity}</p>
@@ -77,7 +77,7 @@ class Circle {
         this.element = document.createElement('div');
         this.element.className = 'circle';
         this.element.style.backgroundColor = `rgb(${colors[region].r}, ${colors[region].g}, ${colors[region].b})`;
-        this.element.innerText = crypto.name;
+        this.element.innerText = crypto.agentName;
         container.appendChild(this.element);
         this.element.addEventListener('click', () => {
             showDetails(crypto);
@@ -175,16 +175,16 @@ function updateCircles(cryptocurrencies) {
 
     for (const crypto of cryptocurrencies) {
         const region = getHighestValueRegion(crypto);
-        if (!circles[crypto.name]) {
-            circles[crypto.name] = new Circle(crypto, region);
+        if (!circles[crypto.agentName]) {
+            circles[crypto.agentName] = new Circle(crypto, region);
         }
-        const circle = circles[crypto.name];
+        const circle = circles[crypto.agentName];
         circle.region = region; // Update the region
         circle.element.style.backgroundColor = `rgb(${colors[region].r}, ${colors[region].g}, ${colors[region].b})`; // Update the color
 
         const weightedPosition = getWeightedPosition(crypto);
-        let x = weightedPosition.x + (Math.random() - 0.5) * 100;
-        let y = weightedPosition.y + (Math.random() - 0.5) * 100;
+        let x = weightedPosition.x;
+        let y = weightedPosition.y;
 
         for (const pos of positions) {
             const dx = x - pos.x;
@@ -245,7 +245,7 @@ async function fetchData() {
     const data = await response.json();
     updateCircles(data);
     if (selectedCrypto) {
-        const updatedCrypto = data.find(c => c.name === selectedCrypto.name);
+        const updatedCrypto = data.find(c => c.agentName === selectedCrypto.agentName);
         if (updatedCrypto) {
             selectedCrypto = updatedCrypto;
             updateDetails();

@@ -88,12 +88,94 @@ body {
   color: #fff;
 }
 
+#search-results {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  background-color: #2a2a3d;
+  border: 1px solid #444;
+  border-radius: 5px;
+  max-height: 200px;
+  overflow-y: auto;
+  position: absolute;
+  width: calc(100% - 22px); /* Adjust width to match the search input */
+  z-index: 1000;
+}
+
+#search-results li {
+  padding: 10px;
+  cursor: pointer;
+}
+
+#search-results li:hover {
+  background-color: #444;
+}
+
+#top-coins-list {
+  list-style: none;
+  padding: 0;
+  margin: 10px 0;
+  background-color: #2a2a3d;
+  border: 1px solid #444;
+  border-radius: 5px;
+  max-height: 200px;
+  overflow-y: auto;
+}
+
+#top-coins-list li {
+  padding: 10px;
+  cursor: pointer;
+}
+
+#top-coins-list li:hover {
+  background-color: #444;
+}
+
 .time-range button:hover {
   background-color: #e91e63;
 }
 
 .chart-container {
   position: relative;
-  height: 250px;
+  height: 400px; /* Increase height for better visibility */
   width: 100%;
+}
+
+#blockchain-stats {
+  padding: 10px;
+  background-color: #2a2a3d;
+  border-radius: 5px;
+  margin-top: 10px;
+}
+
+#blockchain-stats p {
+  margin: 5px 0;
+}
+
+.carousel {
+  display: flex;
+  overflow-x: auto;
+  padding: 10px;
+  gap: 10px;
+}
+
+.coin-card {
+  background-color: #2a2a3d;
+  padding: 20px;
+  border-radius: 8px;
+  min-width: 200px;
+  cursor: pointer;
+  transition: box-shadow 0.3s ease;
+}
+
+.coin-card:hover {
+  box-shadow: 0 0 15px 5px rgba(128, 0, 128, 0.7);
+}
+
+.green {
+  color: #4caf50;
+}
+
+.red {
+  color: #f44336;
 }
