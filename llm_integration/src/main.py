@@ -32,7 +32,6 @@ sys.path.append(plugin_path)
 llm = ChatOpenAI(model_name="gpt-3.5-turbo", api_key=api_key)
 
 def query_langchain(prompt: str):
-    """Query OpenAI's LangChain model with a given prompt and return only the content."""
     try:
         response = llm.invoke(prompt)
 
@@ -53,7 +52,6 @@ class QueryRequest(BaseModel):
 @app.get("/query")
 @app.post("/query")
 async def query_openai(request: Request, query_data: QueryRequest = None, question: str = None):
-    """Ask OpenAI a question about Cookie API data or related topics."""
     try:
         if request.method == "POST":
             question = query_data.question
@@ -77,7 +75,6 @@ async def query_openai(request: Request, query_data: QueryRequest = None, questi
         raise HTTPException(status_code=500, detail=f"Error querying OpenAI: {str(e)}")
 
 def generate_dynamic_prompt(data, query_type):
-    """Generate a dynamic prompt based on the query type (price, volume, sentiment, etc.)."""
     if query_type == "price":
         price = data.get("price")
         return f"The current price of the token is {price}. What can you infer from this?"
@@ -91,7 +88,6 @@ def generate_dynamic_prompt(data, query_type):
         return "Invalid query type."
     
 def generate_graph_data(data, feature):
-    """Generate graph data for a specific feature."""
     labels = []
     data_points = []
 
@@ -104,7 +100,6 @@ def generate_graph_data(data, feature):
 @app.get("/cookie/twitter/{username}")
 async def get_twitter_cookie(username: str, interval: str = "_7Days"):
     try:
-       
         url = f"v2/agents/twitterUsername/{username}?interval={interval}"
         data = fetch_from_cookie_api(url)
 
