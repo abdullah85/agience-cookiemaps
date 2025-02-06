@@ -1,43 +1,47 @@
-import random
 import time
 import json
 
-with open('coins.json', 'r') as f:
-    cryptocurrencies = json.load(f)
-
-use_random_values = False
+use_random_values = False  # Set to False to use real data
 move_amount_high = 1  # Variable to control the amount the coins move by when high
 move_amount_normal = 3  # Variable to control the amount the coins move by when normal
 
-# Assign a bias category to each cryptocurrency
-for crypto in cryptocurrencies:
-    crypto['bias'] = random.choice(['mindshare', 'marketCap', 'liquidity', 'price', 'averageEngagementsCount'])
+# Predefined dictionary with coin values
+cryptocurrencies = [
+    {
+        "agentName": "Bitcoin",
+        "mindshare": 90,
+        "marketCap": 1000000000,
+        "liquidity": 800000000,
+        "price": 50000,
+        "averageEngagementsCount": 100000
+    },
+    {
+        "agentName": "Ethereum",
+        "mindshare": 85,
+        "marketCap": 500000000,
+        "liquidity": 400000000,
+        "price": 3000,
+        "averageEngagementsCount": 80000
+    },
+    # Add more predefined coins as needed
+]
+
+def scale_value(value, min_value, max_value):
+    return max(1, min(100, ((value - min_value) / (max_value - min_value)) * 100))
+
+def notify_frontend():
+    with open('update_flag.json', 'w') as f:
+        json.dump({"updated": True}, f)
 
 def update_values():
     for crypto in cryptocurrencies:
-        crypto.setdefault("mindshare", 50)
-        crypto.setdefault("marketCap", 50)
-        crypto.setdefault("liquidity", 50)
-        crypto.setdefault("price", 50)
-        crypto.setdefault("averageEngagementsCount", 50)
+        crypto['mindshare'] = scale_value(crypto['mindshare'], 0, 100)
+        crypto['marketCap'] = scale_value(crypto['marketCap'], 0, 1000000000)
+        crypto['liquidity'] = scale_value(crypto['liquidity'], 0, 100000000)
+        crypto['price'] = scale_value(crypto['price'], 0, 1000)
+        crypto['averageEngagementsCount'] = scale_value(crypto['averageEngagementsCount'], 0, 100000)
 
-        if use_random_values:
-            for key in ['mindshare', 'marketCap', 'liquidity', 'price', 'averageEngagementsCount']:
-                if crypto[key] > 90:
-                    crypto[key] = max(1, min(100, crypto[key] - random.randint(0, move_amount_high)))
-                elif key == crypto['bias']:
-                    crypto[key] = max(1, min(100, crypto[key] + random.randint(0, move_amount_high)))
-                else:
-                    crypto[key] = max(1, min(100, crypto[key] + random.randint(-move_amount_normal, move_amount_normal)))
-        else:
-            # Set the bias value to 100 and all other values to 0 only once
-            if not crypto.get('initialized', False):
-                for key in ['mindshare', 'marketCap', 'liquidity', 'price', 'averageEngagementsCount']:
-                    if key == crypto['bias']:
-                        crypto[key] = 100
-                    else:
-                        crypto[key] = 0
-                crypto['initialized'] = True
+    notify_frontend()
 
     #with open('cryptocurrencies.json', 'w') as f:
         #json.dump(cryptocurrencies, f)
@@ -45,4 +49,4 @@ def update_values():
 if __name__ == "__main__":
     while True:
         update_values()
-        time.sleep(0.5)
+        time.sleep(15)
