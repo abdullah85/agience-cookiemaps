@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Crypto Dashboard</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}"> <!-- Add this line to ensure flask support -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+  <div class="dashboard">
+    <aside class="sidebar">
+      <h2>CryptoMap</h2>
+      <nav>
+        <ul>
+          <li>Dashboard</li>
+          <li>Trades</li>
+          <li>Portfolio</li>
+          <li>Settings</li>
+        </ul>
+      </nav>
+    </aside>
+
+    <main class="main-content">
+      <header class="navbar">
+        <h1>Welcome Back, User!</h1>
+        <div class="theme-toggle">
+          <label>
+            <input type="checkbox" id="theme-toggle">
+            <span>Dark Mode</span>
+          </label>
+        </div>
+      </header><div class="card">
+  <h2>Account Balance</h2>
+  <p class="balance">$12,345</p>
+  <input type="text" id="search-input" placeholder="Search coins..." />
+  <ul class="holdings" id="holdings-list">
+    <li data-coin="Bitcoin">Bitcoin: 0.5 BTC</li>
+    <li data-coin="Ethereum">Ethereum: 2.0 ETH</li>
+    <li data-coin="Cardano">Cardano: 1000 ADA</li>
+    <li data-coin="Solana">Solana: 50 SOL</li>
+    <li data-coin="Polkadot">Polkadot: 200 DOT</li>
+  </ul>
+</div>
+
+
+      <section class="content">
+        <div class="card large">
+          <h2>Portfolio Overview</h2>
+          <div class="time-range">
+            <button data-range="1D">1D</button>
+            <button data-range="1W">1W</button>
+            <button data-range="1M">1M</button>
+            <button data-range="YTD">YTD</button>
+            <button data-range="All">All</button>
+          </div>
+          <div class="chart-container">
+            <canvas id="cryptoChart"></canvas>
+          </div>
+        </div>
+        <div class="card">
+          <h2>Recent Transactions</h2>
+          <ul class="transactions">
+            <li>Bitcoin Purchase <span class="green">+0.05 BTC</span></li>
+            <li>Ethereum Sale <span class="red">-0.1 ETH</span></li>
+            <li>Cardano Purchase <span class="green">+500 ADA</span></li>
+          </ul>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>

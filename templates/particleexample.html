@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Drag and Drop Circles with Particles</title>
+    <style>
+        body { margin: 0; overflow: hidden; background: black; }
+        canvas { display: block; }
+    </style>
+</head>
+<body>
+    <canvas id="canvas"></canvas>
+    <script>
+        const canvas = document.getElementById("canvas");
+        const ctx = canvas.getContext("2d");
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+
+        class Circle {
+            constructor(x, y, radius, startColor, endColor) {
+                this.x = x;
+                this.y = y;
+                this.radius = radius;
+                this.dragging = false;
+                this.startColor = startColor;
+                this.endColor = endColor;
+            }
+            draw() {
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+                ctx.fillStyle = "white";
+                ctx.fill();
+            }
+        }
+
+        class Particle {
+            constructor(x, y, targetX, targetY, startColor, endColor) {
+                this.x = x;
+                this.y = y;
+                this.targetX = targetX;
+                this.targetY = targetY;
+                this.vx = (targetX - x) * 0.005 + (Math.random() - 0.5) * 0.5; // Increased randomness
+                this.vy = (targetY - y) * 0.005 + (Math.random() - 0.5) * 0.5; // Increased randomness
+                this.alpha = 1;
+                this.size = 1;
+                this.angle = 0; // Add angle for sine wave effect
+                this.amplitude = 1; // Add amplitude for wave strength
+                this.startColor = startColor; // Start color
+                this.endColor = endColor; // End color
+            }
+            update() {
+                this.x -= this.vx;
+                this.y -= this.vy + Math.sin(this.angle) * this.amplitude; // Apply sine wave effect with amplitude
+                this.angle += 0.1; // Increment angle for sine wave
+                this.alpha -= 0.005;
+                const dist = Math.hypot(this.x - this.targetX, this.y - this.targetY);
+                if (dist < 5) {
+                    this.alpha = 0;
+                }
+            }
+            draw() {
+                const progress = 1 - this.alpha; // Progress from start to end
+                const r = this.startColor.r + progress * (this.endColor.r - this.startColor.r);
+                const g = this.startColor.g + progress * (this.endColor.g - this.startColor.g);
+                const b = this.startColor.b + progress * (this.endColor.b - this.startColor.b);
+                ctx.globalAlpha = this.alpha;
+                ctx.fillStyle = `rgb(${r}, ${g}, ${b})`;
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.globalAlpha = 1;
+            }
+        }
+
+        const circles = [
+            new Circle(200, 200, 30, { r: 255, g: 0, b: 0 }, { r: 255, g: 255, b: 0 }), // Red to Yellow
+            new Circle(600, 200, 30, { r: 0, g: 255, b: 0 }, { r: 0, g: 255, b: 255 }), // Green to Cyan
+            new Circle(400, 400, 30, { r: 0, g: 0, b: 255 }, { r: 255, g: 0, b: 255 }), // Blue to Magenta
+            new Circle(800, 400, 30, { r: 255, g: 255, b: 255 }, { r: 0, g: 0, b: 0 })  // White to Black
+        ];
+        let particles = [];
+        let selectedCircle = null;
+
+        const colors = [
+            { start: { r: 255, g: 0, b: 0 }, end: { r: 255, g: 255, b: 0 } }, // Red to Yellow
+            { start: { r: 0, g: 255, b: 0 }, end: { r: 0, g: 255, b: 255 } }, // Green to Cyan
+            { start: { r: 0, g: 0, b: 255 }, end: { r: 255, g: 0, b: 255 } }, // Blue to Magenta
+            { start: { r: 255, g: 255, b: 255 }, end: { r: 0, g: 0, b: 0 } }  // White to Black
+        ];
+
+        canvas.addEventListener("mousedown", (e) => {
+            circles.forEach(circle => {
+                const dist = Math.hypot(e.clientX - circle.x, e.clientY - circle.y);
+                if (dist < circle.radius) {
+                    selectedCircle = circle;
+                }
+            });
+        });
+
+        canvas.addEventListener("mousemove", (e) => {
+            if (selectedCircle) {
+                selectedCircle.x = e.clientX;
+                selectedCircle.y = e.clientY;
+            }
+        });
+
+        canvas.addEventListener("mouseup", () => {
+            selectedCircle = null;
+        });
+
+        function animate() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            circles.forEach(circle => circle.draw());
+            particles.forEach((particle, index) => {
+                particle.update();
+                if (particle.alpha <= 0) {
+                    particles.splice(index, 1);
+                } else {
+                    particle.draw();
+                }
+            });
+
+            circles.forEach((source, sourceIndex) => {
+                circles.forEach((target, targetIndex) => {
+                    if (sourceIndex < targetIndex) {
+                        for (let i = 0; i < 3; i++) {
+                            particles.push(new Particle(source.x, source.y, target.x, target.y, source.startColor, target.endColor));
+                        }
+                    }
+                });
+            });
+            requestAnimationFrame(animate);
+        }
+
+        animate();
+    </script>
+</body>
+</html>
+

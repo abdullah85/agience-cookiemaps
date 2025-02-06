@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cookiemaps</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap">
+    <link rel="stylesheet" href="{{ url_for('static', filename='huhCSS.css') }}">
+</head>
+<body>
+    <div class="margin">
+        <h1><a href="{{ url_for('dashboard') }}" style="color: white; text-decoration: none;">CryptoMaps Regions</a></h1>
+        <div class="legend">
+            <div class="legend-item">
+                <div class="legend-color" style="background-color: green;"></div>
+                Popular on Social Media
+            </div>
+            <div class="legend-item">
+                <div class="legend-color" style="background-color: orange;"></div>
+                Large Market Value
+            </div>
+            <div class="legend-item">
+                <div class="legend-color" style="background-color: red;"></div>
+                Easy to Buy/Sell
+            </div>
+            <div class="legend-item">
+                <div class="legend-color" style="background-color: gray;"></div>
+                Stable Price
+            </div>
+            <div class="legend-item">
+                <div class="legend-color" style="background-color: blue;"></div>
+                High Community Engagement
+            </div>
+        </div>
+        <div class="details" id="details"></div>
+        <form id="sliders" style="display: none;">
+            <label>Mindshare: <input type="range" id="mindshare-slider" min="0" max="100" value="50"></label>
+            <label>Market Cap: <input type="range" id="marketCap-slider" min="0" max="100" value="50"></label>
+            <label>Liquidity: <input type="range" id="liquidity-slider" min="0" max="100" value="50"></label>
+            <label>Price: <input type="range" id="price-slider" min="0" max="100" value="50"></label>
+            <label>Average Engagements Count: <input type="range" id="averageEngagementsCount-slider" min="0" max="100" value="50"></label>
+            <button type="submit">Update</button>
+        </form>
+    </div>
+    <div class="container">
+        <canvas id="canvas"></canvas>
+        <div class="central-circle" id="central-circle">Center</div>
+    </div>
+    <script src="{{ url_for('static', filename='staticJS/huhJS.js') }}"></script>
+</body>
+</html>

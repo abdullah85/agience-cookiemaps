@@ -1,0 +1,607 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cryptocurrency Regions</title>
+    <style>
+        body { margin: 0; font-family: Arial, sans-serif; display: flex; color: white; height: 100vh; }
+        .margin {
+            width: 15%;
+            background-color: #333;
+            padding: 20px;
+            box-shadow: 2px 0 5px rgba(0,0,0,0.1);
+            z-index: 10; /* Ensure the sidebar is in front */
+            position: relative; /* Ensure the sidebar is in front */
+        }
+        .container {
+            position: relative;
+            flex-grow: 1;
+            height: 100%;
+            background-color: black;
+            overflow: hidden;
+        }
+        .circle {
+            width: 50px; /* Reduced size */
+            height: 50px; /* Reduced size */
+            border-radius: 50%;
+            position: absolute;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            text-align: center;
+            font-size: 10px; /* Reduced text size */
+            transition: left 1s, top 1s;
+        }
+        .legend {
+            background: white;
+            color: black;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+        .legend-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 5px;
+        }
+        .legend-color {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            margin-right: 10px;
+        }
+        .region {
+            padding: 20px;
+            margin: 10px 0;
+            border-radius: 8px;
+            color: white;
+        }
+        .high-mindshare {
+            background: linear-gradient(90deg, rgba(0,128,0,1) 0%, rgba(144,238,144,1) 100%);
+        }
+        .high-market-cap {
+            background: linear-gradient(90deg, rgba(255,165,0,1) 0%, rgba(255,223,186,1) 100%);
+        }
+        .high-liquidity {
+            background: linear-gradient(90deg, rgba(255,0,0,1) 0%, rgba(255,182,193,1) 100%);
+        }
+        .stablecoin {
+            background: linear-gradient(90deg, rgba(128,128,128,1) 0%, rgba(211,211,211,1) 100%);
+        }
+        .high-social-activity {
+            background: linear-gradient(90deg, rgba(0,128,0,1) 0%, rgba(144,238,144,1) 100%);
+        }
+        .high-engagement {
+            background: linear-gradient(90deg, rgba(0,0,255,1) 0%, rgba(173,216,230,1) 100%);
+        }
+        .details {
+            background: rgba(0, 0, 0, 0.8);
+            padding: 20px;
+            border-radius: 10px;
+            color: white;
+            margin-top: 20px;
+        }
+        .draw-tool-button, .clear-drawing-button {
+            padding: 10px 20px;
+            background-color: #000;
+            color: #fff;
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .draw-tool-button i, .clear-drawing-button i {
+            margin-right: 5px;
+        }
+        .selected-coins {
+            background-color: #fff;
+            color: #000;
+            padding: 10px;
+            border-radius: 5px;
+            margin-top: 20px;
+        }
+        .central-circle {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background-color: purple;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            text-align: center;
+            font-size: 10px;
+        }
+        .highlighted {
+            position: absolute;
+            top: 0;
+            left: 0;
+            pointer-events: none;
+        }
+        .circle-tool-button {
+            padding: 10px 20px;
+            background-color: #000;
+            color: #fff;
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .circle-tool-button i {
+            margin-right: 5px;
+        }
+        .clear-circle-button {
+            padding: 10px 20px;
+            background-color: #000;
+            color: #fff;
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .clear-circle-button i {
+            margin-right: 5px;
+        }
+    </style>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/js/all.min.js" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+</head>
+<body>
+    <div class="margin">
+        <h1>Trendminer Regions</h1>
+        <div class="legend">
+            <div class="legend-item">
+                <div class="legend-color" style="background-color: green;"></div>
+                Popular on Social Media
+            </div>
+            <div class="legend-item">
+                <div class="legend-color" style="background-color: orange;"></div>
+                Large Market Value
+            </div>
+            <div class="legend-item">
+                <div class="legend-color" style="background-color: red;"></div>
+                Easy to Buy/Sell
+            </div>
+            <div class="legend-item">
+                <div class="legend-color" style="background-color: gray;"></div>
+                Stable Price
+            </div>
+            <div class="legend-item">
+                <div class="legend-color" style="background-color: blue;"></div>
+                High Community Engagement
+            </div>
+        </div>
+        <button class="draw-tool-button">
+            <i class="fas fa-pencil-alt"></i> Start Drawing
+        </button>
+        <button class="clear-drawing-button">
+            <i class="fas fa-eraser"></i> Clear Drawing
+        </button>
+        <button class="circle-tool-button">
+            <i class="fas fa-circle"></i> Circle Tool
+        </button>
+        <button class="clear-circle-button">
+            <i class="fas fa-eraser"></i> Clear Circle
+        </button>
+        <div class="selected-coins"></div>
+        <div class="details" id="details"></div>
+    </div>
+    <div class="container" id="circles-container">
+        <div class="central-circle" id="central-circle">Center</div>
+    </div>
+    <script>
+        const colors = {
+            "Popular on Social Media": "green",
+            "Large Market Value": "orange",
+            "Easy to Buy/Sell": "red",
+            "Stable Price": "gray",
+            "High Community Engagement": "blue"
+        };
+
+        const container = document.getElementById('circles-container');
+        const circles = {};
+        const details = document.getElementById('details');
+        let selectedCrypto = null;
+
+        let drawing = false;
+        let drawTool;
+        let path = [];
+        let highlightedArea = null;
+
+        function showDetails(crypto) {
+            selectedCrypto = crypto;
+            details.style.display = 'block';
+            updateDetails();
+        }
+
+        function updateDetails() {
+            if (selectedCrypto) {
+                details.innerHTML = `
+                    <h2>${selectedCrypto.name}</h2>
+                    <p>High Mindshare: ${selectedCrypto.mindshare}</p>
+                    <p>High Market Cap: ${selectedCrypto.marketCap}</p>
+                    <p>High Liquidity: ${selectedCrypto.liquidity}</p>
+                    <p>Stablecoin: ${selectedCrypto.price}</p>
+                `;
+            }
+        }
+
+        function createCircle(crypto, region) {
+            const circle = document.createElement('div');
+            circle.className = 'circle';
+            circle.style.backgroundColor = colors[region];
+            circle.innerText = crypto.name; // Ensure the text is displayed
+
+            container.appendChild(circle);
+            circles[crypto.name] = { element: circle, crypto };
+
+            circle.addEventListener('click', () => showDetails(crypto));
+        }
+
+        function getHighestValueRegion(crypto) {
+            const values = {
+                "Popular on Social Media": crypto.mindshare,
+                "Large Market Value": crypto.marketCap,
+                "Easy to Buy/Sell": crypto.liquidity,
+                "Stable Price": crypto.price,
+                "High Community Engagement": crypto.averageEngagementsCount
+            };
+            return Object.keys(values).reduce((a, b) => values[a] > values[b] ? a : b);
+        }
+
+        function updateCircles(cryptocurrencies) {
+            const positions = [];
+
+            for (const crypto of cryptocurrencies) {
+                const region = getHighestValueRegion(crypto);
+                if (!circles[crypto.name]) {
+                    createCircle(crypto, region);
+                }
+                const circle = circles[crypto.name].element;
+                circle.style.backgroundColor = colors[region];
+                let x = (crypto.mindshare || 0) * 10; // Increased movement value
+                let y = (crypto.marketCap || 0) * 10; // Increased movement value
+
+                // Ensure circles do not overlap and just touch/bounce off each other
+                for (const pos of positions) {
+                    const dx = x - pos.x;
+                    const dy = y - pos.y;
+                    const distance = Math.sqrt(dx * dx + dy * dy);
+                    if (distance < 100) { // 100 is the diameter of the circle
+                        const angle = Math.atan2(dy, dx);
+                        x = pos.x + 100 * Math.cos(angle);
+                        y = pos.y + 100 * Math.sin(angle);
+                    }
+                }
+
+                positions.push({ x, y, color: colors[region] });
+
+                circle.style.left = `${Math.max(0, Math.min(container.clientWidth - 100, x))}px`;
+                circle.style.top = `${Math.max(0, Math.min(container.clientHeight - 100, y))}px`;
+
+                // Update the selected crypto details in real-time
+                if (selectedCrypto && selectedCrypto.name === crypto.name) {
+                    selectedCrypto = crypto;
+                    updateDetails();
+                }
+            }
+        }
+
+        function toggleDrawTool() {
+            drawing = !drawing;
+            const button = document.querySelector('.draw-tool-button');
+            button.innerHTML = drawing ? '<i class="fas fa-stop"></i> Stop Drawing' : '<i class="fas fa-pencil-alt"></i> Start Drawing';
+            button.disabled = drawing; // Disable the button when drawing starts
+            if (!drawing) {
+                document.removeEventListener('mousedown', startDrawing);
+            } else {
+                document.addEventListener('mousedown', startDrawing);
+            }
+        }
+
+        function startDrawing(event) {
+            if (!drawing) return;
+
+            // Remove any existing circle
+            clearCircle();
+
+            startX = event.clientX;
+            startY = event.clientY;
+
+            drawTool = document.createElement('canvas');
+            drawTool.className = 'draw-tool';
+            drawTool.style.position = 'absolute';
+            drawTool.style.top = '0';
+            drawTool.style.left = '0';
+            drawTool.style.pointerEvents = 'none'; // Ensure it doesn't interfere with mouse events
+            drawTool.width = window.innerWidth;
+            drawTool.height = window.innerHeight;
+            document.body.appendChild(drawTool);
+
+            const ctx = drawTool.getContext('2d');
+            ctx.strokeStyle = 'rgba(255, 0, 0, 1)'; // Red color with full opacity
+            ctx.lineWidth = 2;
+            ctx.lineCap = 'round';
+            ctx.lineJoin = 'round';
+            ctx.beginPath();
+            ctx.moveTo(startX, startY);
+
+            document.addEventListener('mousemove', draw);
+            document.addEventListener('mouseup', stopDrawing);
+        }
+
+        function draw(event) {
+            if (!drawing) return;
+
+            const ctx = drawTool.getContext('2d');
+            ctx.lineTo(event.clientX, event.clientY);
+            ctx.stroke();
+
+            path.push({ x: event.clientX, y: event.clientY });
+
+            updateSelectedCoins(); // Update selected coins dynamically
+        }
+
+        function stopDrawing() {
+            if (!drawing) return;
+
+            document.removeEventListener('mousemove', draw);
+            document.removeEventListener('mouseup', stopDrawing);
+
+            if (highlightedArea) {
+                highlightedArea.remove();
+            }
+
+            highlightedArea = document.createElement('canvas');
+            highlightedArea.className = 'highlighted';
+            highlightedArea.width = window.innerWidth;
+            highlightedArea.height = window.innerHeight;
+            document.body.appendChild(highlightedArea);
+
+            const ctx = highlightedArea.getContext('2d');
+            ctx.fillStyle = 'rgba(255, 255, 0, 0.3)'; // Highlight color
+            ctx.clearRect(0, 0, highlightedArea.width, highlightedArea.height); // Clear previous drawings
+            ctx.beginPath();
+            ctx.moveTo(path[0].x, path[0].y);
+            for (let i = 1; i < path.length; i++) {
+                ctx.lineTo(path[i].x, path[i].y);
+            }
+            ctx.closePath(); // Ensure the path is closed
+            ctx.fill();
+
+            updateSelectedCoins();
+
+            // Re-enable the button when drawing stops
+            const button = document.querySelector('.draw-tool-button');
+            button.disabled = false;
+            button.innerHTML = '<i class="fas fa-pencil-alt"></i> Start Drawing';
+            drawing = false;
+        }
+
+        function updateSelectedCoins() {
+            const coins = document.querySelectorAll('.circle');
+            const selectedCoins = [];
+
+            coins.forEach(coin => {
+                const coinRect = coin.getBoundingClientRect();
+                const coinCenter = {
+                    x: coinRect.left + coinRect.width / 2,
+                    y: coinRect.top + coinRect.height / 2
+                };
+
+                if (isPointInPath(coinCenter)) {
+                    selectedCoins.push(coin.innerText);
+                }
+            });
+
+            displaySelectedCoins(selectedCoins);
+        }
+
+        function isPointInPath(point) {
+            const ctx = highlightedArea.getContext('2d');
+            ctx.clearRect(0, 0, highlightedArea.width, highlightedArea.height); // Clear previous path
+            ctx.beginPath();
+            ctx.moveTo(path[0].x, path[0].y);
+            for (let i = 1; i < path.length; i++) {
+                ctx.lineTo(path[i].x, path[i].y);
+            }
+            ctx.closePath();
+            return ctx.isPointInPath(point.x, point.y);
+        }
+
+        function displaySelectedCoins(coins) {
+            const selectedCoinsDiv = document.querySelector('.selected-coins');
+            selectedCoinsDiv.innerHTML = `<strong>Selected Coins:</strong><br>${coins.join('<br>')}`;
+        }
+
+        function clearDrawing() {
+            const drawnElements = document.querySelectorAll('.draw-tool');
+            drawnElements.forEach(element => element.remove());
+            if (highlightedArea) {
+                highlightedArea.remove();
+                highlightedArea = null;
+            }
+            path = [];
+            const selectedCoinsDiv = document.querySelector('.selected-coins');
+            selectedCoinsDiv.innerHTML = `<strong>Selected Coins:</strong><br>`;
+        }
+
+        let circleTool = false;
+        // New globals for circle tool updates
+        let circleCenter = null;
+        let currentCircleRadius = 0;
+
+        function toggleCircleTool() {
+            circleTool = !circleTool;
+            const button = document.querySelector('.circle-tool-button');
+            button.innerHTML = circleTool ? '<i class="fas fa-stop"></i> Stop Circle Tool' : '<i class="fas fa-circle"></i> Circle Tool';
+            button.disabled = circleTool; // Disable the button when circle tool starts
+            if (!circleTool) {
+                document.removeEventListener('mousedown', startCircleDrawing);
+            } else {
+                document.addEventListener('mousedown', startCircleDrawing);
+            }
+        }
+
+        function startCircleDrawing(event) {
+            if (!circleTool) return;
+
+            // Remove any existing drawing
+            clearDrawing();
+
+            startX = event.clientX;
+            startY = event.clientY;
+            circleCenter = { x: startX, y: startY };
+            currentCircleRadius = 0;
+
+            drawTool = document.createElement('canvas');
+            drawTool.className = 'draw-tool';
+            drawTool.style.position = 'absolute';
+            drawTool.style.top = '0';
+            drawTool.style.left = '0';
+            drawTool.style.pointerEvents = 'none'; // Ensure it doesn't interfere with mouse events
+            drawTool.width = window.innerWidth;
+            drawTool.height = window.innerHeight;
+            document.body.appendChild(drawTool);
+
+            const ctx = drawTool.getContext('2d');
+            ctx.strokeStyle = 'rgba(255, 0, 0, 1)'; // Red color with full opacity
+            ctx.lineWidth = 2;
+            ctx.lineCap = 'round';
+            ctx.lineJoin = 'round';
+            ctx.beginPath();
+
+            document.addEventListener('mousemove', drawCircle);
+            document.addEventListener('mouseup', stopCircleDrawing);
+        }
+
+        function drawCircle(event) {
+            if (!circleTool) return;
+
+            const ctx = drawTool.getContext('2d');
+            const radius = Math.sqrt(Math.pow(event.clientX - startX, 2) + Math.pow(event.clientY - startY, 2));
+            currentCircleRadius = radius;  // Update the current radius for dynamic selections
+            ctx.clearRect(0, 0, drawTool.width, drawTool.height); // Clear previous drawings
+            ctx.beginPath();
+            ctx.arc(startX, startY, radius, 0, 2 * Math.PI);
+            ctx.stroke();
+
+            updateSelectedCoinsFromCircle(radius); // Update selected coins dynamically
+        }
+
+        function stopCircleDrawing() {
+            if (!circleTool) return;
+
+            document.removeEventListener('mousemove', drawCircle);
+            document.removeEventListener('mouseup', stopCircleDrawing);
+
+            if (highlightedArea) {
+                highlightedArea.remove();
+            }
+
+            highlightedArea = document.createElement('canvas');
+            highlightedArea.className = 'highlighted';
+            highlightedArea.width = window.innerWidth;
+            highlightedArea.height = window.innerHeight;
+            document.body.appendChild(highlightedArea);
+
+            const ctx = highlightedArea.getContext('2d');
+            ctx.fillStyle = 'rgba(255, 255, 0, 0.3)'; // Highlight color
+            ctx.clearRect(0, 0, highlightedArea.width, highlightedArea.height); // Clear previous drawings
+            ctx.beginPath();
+            const radius = Math.sqrt(Math.pow(event.clientX - startX, 2) + Math.pow(event.clientY - startY, 2));
+            ctx.arc(startX, startY, radius, 0, 2 * Math.PI);
+            ctx.fill();
+
+            updateSelectedCoinsFromCircle(radius);
+
+            // Re-enable the button when circle drawing stops
+            const button = document.querySelector('.circle-tool-button');
+            button.disabled = false;
+            button.innerHTML = '<i class="fas fa-circle"></i> Circle Tool';
+            circleTool = false;
+        }
+
+        function updateSelectedCoinsFromCircle(radius) {
+            const coins = document.querySelectorAll('.circle');
+            const selectedCoins = [];
+
+            coins.forEach(coin => {
+                const coinRect = coin.getBoundingClientRect();
+                const coinCenter = {
+                    x: coinRect.left + coinRect.width / 2,
+                    y: coinRect.top + coinRect.height / 2
+                };
+
+                const distance = Math.sqrt(Math.pow(coinCenter.x - startX, 2) + Math.pow(coinCenter.y - startY, 2));
+                if (distance <= radius) {
+                    selectedCoins.push(coin.innerText);
+                }
+            });
+
+            displaySelectedCoins(selectedCoins);
+        }
+
+        function clearCircle() {
+            const drawnElements = document.querySelectorAll('.draw-tool');
+            drawnElements.forEach(element => element.remove());
+            if (highlightedArea) {
+                highlightedArea.remove();
+                highlightedArea = null;
+            }
+            const selectedCoinsDiv = document.querySelector('.selected-coins');
+            selectedCoinsDiv.innerHTML = `<strong>Selected Coins:</strong><br>`;
+        }
+
+        document.addEventListener('mousedown', startDrawing);
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const drawButton = document.querySelector('.draw-tool-button');
+            drawButton.addEventListener('click', toggleDrawTool);
+
+            const clearButton = document.querySelector('.clear-drawing-button');
+            clearButton.addEventListener('click', clearDrawing);
+
+            const circleButton = document.querySelector('.circle-tool-button');
+            circleButton.addEventListener('click', toggleCircleTool);
+
+            const clearCircleButton = document.querySelector('.clear-circle-button');
+            clearCircleButton.addEventListener('click', clearCircle);
+        });
+
+        async function fetchData() {
+            const response = await fetch('/data');
+            const data = await response.json();
+            updateCircles(data);
+            if (highlightedArea) {
+                // Use circleCenter and currentCircleRadius for continuous update when circle tool is active
+                if (circleCenter) {
+                    updateSelectedCoinsFromCircle(currentCircleRadius);
+                } else {
+                    updateSelectedCoins();
+                }
+            }
+        }
+
+        setInterval(fetchData, 500); // Fetch data every 0.5 seconds
+    </script>
+</body>
+</html>
