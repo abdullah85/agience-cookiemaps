@@ -31,21 +31,24 @@
             <span>Dark Mode</span>
           </label>
         </div>
-      </header><div class="card">
-  <h2>Account Balance</h2>
-  <p class="balance">$12,345</p>
-  <input type="text" id="search-input" placeholder="Search coins..." />
-  <ul class="holdings" id="holdings-list">
-    <li data-coin="Bitcoin">Bitcoin: 0.5 BTC</li>
-    <li data-coin="Ethereum">Ethereum: 2.0 ETH</li>
-    <li data-coin="Cardano">Cardano: 1000 ADA</li>
-    <li data-coin="Solana">Solana: 50 SOL</li>
-    <li data-coin="Polkadot">Polkadot: 200 DOT</li>
-  </ul>
-</div>
-
+      </header>
+      <div class="card">
+        <h2>Account Balance</h2>
+        <p class="balance">$12,345</p>
+        <input type="text" id="search-input" placeholder="Search coins..." />
+        <ul id="search-results" class="dropdown"></ul>
+        <ul class="holdings" id="holdings-list">
+          <li data-coin="Bitcoin">Bitcoin: 0.5 BTC</li>
+          <li data-coin="Ethereum">Ethereum: 2.0 ETH</li>
+          <li data-coin="Cardano">Cardano: 1000 ADA</li>
+          <li data-coin="Solana">Solana: 50 SOL</li>
+          <li data-coin="Polkadot">Polkadot: 200 DOT</li>
+        </ul>
+      </div>
 
       <section class="content">
+        <h2>Top 10 Market Value Coins</h2>
+        <div id="top-coins-carousel" class="carousel"></div>
         <div class="card large">
           <h2>Portfolio Overview</h2>
           <div class="time-range">
@@ -67,10 +70,14 @@
             <li>Cardano Purchase <span class="green">+500 ADA</span></li>
           </ul>
         </div>
+        <div class="card">
+          <h2>Blockchain Stats</h2>
+          <div id="blockchain-stats"></div>
+        </div>
       </section>
     </main>
   </div>
-
-  <script src="script.js"></script>
+  <script src="{{ url_for('static', filename='staticJS/coinGraph.js') }}"></script>
+  <script src="{{ url_for('static', filename='staticJS/blockchainStats.js') }}"></script>
 </body>
 </html>
