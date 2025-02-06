@@ -5,7 +5,7 @@ import sqlite3
 
 def get_agent_data_by_twitter_username(twitter_username, interval):
     url = f'https://api.cookie.fun/v2/agents/twitterUsername/{twitter_username}?interval={interval}'
-    headers = {'x-api-key': 'b8356b68-33b6-487b-98e5-ccf0f0f2ced4'}
+    headers = {'x-api-key': 'b8356b68-xxxx-xxxx-xxxx-ccf0fxxxced4'}
     response = requests.get(url, headers=headers)
     return response.json()
 
