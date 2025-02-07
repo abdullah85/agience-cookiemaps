@@ -6,6 +6,7 @@ import json
 
 app = Flask(__name__)
 
+
 def update_cryptocurrencies():
     while True:
         update_values()
@@ -43,12 +44,16 @@ def data():
 
 @app.route('/update', methods=['POST'])
 def update():
+    market_cap_divisor = 100000000000000
+    liquidity_divisor = 100000000
+    price_divisor = 1000
+    engagements_divisor = 100000
     data = request.json
     for crypto in cryptocurrencies:
-        if crypto['name'] == data['name']:
+        if crypto['agentName'] == data['name']:
             crypto['mindshare'] = data['mindshare']
-            crypto['marketCap'] = data['marketCap']
-            crypto['liquidity'] = data['liquidity']
+            crypto['marketCap'] = data['marketCap'] / market_cap_divisor
+            crypto['liquidity'] = data['liquidity'] / liquidity_divisor
             crypto['price'] = data['price']
             crypto['averageEngagementsCount'] = data['averageEngagementsCount']
             return jsonify(crypto)

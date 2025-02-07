@@ -22,14 +22,24 @@ canvas { display: block; }
     font-size: 10px;
     transition: left 1s, top 1s; /* Smooth transition */
 }
+.circle:hover {
+    box-shadow: 0 4px 8px rgba(255, 101, 255, 0.575); /* Add drop shadow on hover */
+    transform: scale(1.1); /* Slightly increase size on hover */
+}
 .margin {
-    width: 15%;
+    width: 12%;
     background-color: #333;
     padding: 20px;
     box-shadow: 2px 0 5px rgba(0,0,0,0.1);
     z-index: 10; /* Ensure the sidebar is in front */
     position: relative; /* Ensure the sidebar is in front */
-    font-size: 1.5em; /* Increase font size */
+    font-size: 0.8em; /* Base font size reduced from 1em */
+    transform-origin: top left; /* Set the origin for scaling */
+    overflow-y: auto; /* Add vertical scroll if content overflows */
+    overflow-x: hidden; /* Prevent horizontal scrolling */
+    max-height: 100vh; /* Ensure the sidebar does not exceed the viewport height */
+    display: flex;
+    flex-direction: column; /* Ensure children are stacked vertically */
 }
 .legend {
     background: white;
@@ -38,7 +48,8 @@ canvas { display: block; }
     border: 1px solid #ccc;
     border-radius: 5px;
     margin-bottom: 20px;
-    font-size: 1.2em; /* Increase font size */
+    font-size: 0.6em; /* Base font size reduced from 0.8em */
+    flex-shrink: 0; /* Prevent shrinking */
 }
 .legend-item {
     display: flex;
@@ -64,4 +75,87 @@ canvas { display: block; }
     border-radius: 10px;
     color: white;
     margin-top: 20px;
+    flex-shrink: 0; /* Prevent shrinking */
+    overflow-y: auto; /* Add vertical scroll if content overflows */
+    overflow-x: hidden; /* Prevent horizontal scrolling */
+    max-height: calc(100vh - 40px); /* Ensure the details section does not exceed the viewport height */
+    font-size: 0.8em; /* Base font size reduced from 1em */
 }
+
+.drawing-buttons {
+    margin-top: 20px;
+}
+
+.selected-coins {
+    margin-top: 20px;
+    background: white;
+    color: black;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+.selected-coins h3 {
+    margin: 0 0 10px 0;
+}
+
+.selected-coins ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.selected-coins li {
+    margin-bottom: 5px;
+}
+
+/* Media queries for dynamic font size */
+@media (max-width: 1200px) {
+    .margin {
+        font-size: 0.7em; /* Reduced from 0.9em */
+    }
+    .legend {
+        font-size: 0.5em; /* Reduced from 0.7em */
+    }
+    .details {
+        font-size: 0.7em; /* Reduced from 0.9em */
+    }
+}
+
+@media (max-width: 992px) {
+    .margin {
+        font-size: 0.6em; /* Reduced from 0.8em */
+    }
+    .legend {
+        font-size: 0.4em; /* Reduced from 0.6em */
+    }
+    .details {
+        font-size: 0.6em; /* Reduced from 0.8em */
+    }
+}
+
+@media (max-width: 768px) {
+    .margin {
+        font-size: 0.5em; /* Reduced from 0.7em */
+    }
+    .legend {
+        font-size: 0.3em; /* Reduced from 0.5em */
+    }
+    .details {
+        font-size: 0.5em; /* Reduced from 0.7em */
+    }
+}
+
+@media (max-width: 576px) {
+    .margin {
+        font-size: 0.4em; /* Reduced from 0.6em */
+    }
+    .legend {
+        font-size: 0.2em; /* Reduced from 0.4em */
+    }
+    .details {
+        font-size: 0.6em;
+    }
+}
+
+
