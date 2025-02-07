@@ -6,10 +6,67 @@
     <title>Cookiemaps</title>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap">
     <link rel="stylesheet" href="{{ url_for('static', filename='huhCSS.css') }}">
+    <style>
+        .chat-icon {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            width: 60px;
+            height: 60px; 
+            background-color: #a020f0;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 32px; /* Increased from 24px */
+            text-decoration: none;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            transition: background-color 0.3s ease, transform 0.3s ease;
+            z-index: 1000; /* Added to ensure it appears in front */
+        }
+        .chat-icon:hover {
+            background-color: #a828f8;
+            transform: scale(1.1);
+        }
+        .draw-tool-button, .clear-drawing-button {
+            padding: 10px 20px;
+            background-color: #000;
+            color: #fff;
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .draw-tool-button i, .clear-drawing-button i {
+            margin-right: 5px;
+        }
+        .highlighted {
+            position: absolute;
+            top: 0;
+            left: 0;
+            pointer-events: none;
+        }
+        .selected-coins {
+            background-color: #fff;
+            color: #000;
+            padding: 10px;
+            border-radius: 5px;
+            margin-top: 20px;
+        }
+    </style>
 </head>
 <body>
-    <div class="margin">
-        <h1><a href="{{ url_for('dashboard') }}" style="color: white; text-decoration: none;">CryptoMaps Regions</a></h1>
+    <div class="margin" id="navbar">
+        <h1>
+            <a href="{{ url_for('dashboard') }}" style="color: white; text-decoration: none;">
+                <img src="{{ url_for('static', filename='agience.png') }}" alt="Ageince Logo" style="height: 40px; vertical-align: middle; margin-right: 10px;">
+                CookieMaps
+            </a>
+        </h1>
         <div class="legend">
             <div class="legend-item">
                 <div class="legend-color" style="background-color: green;"></div>
@@ -32,20 +89,198 @@
                 High Community Engagement
             </div>
         </div>
+        <button class="draw-tool-button">
+            <i class="fas fa-pencil-alt"></i> Start Drawing
+        </button>
+        <button class="clear-drawing-button">
+            <i class="fas fa-eraser"></i> Clear Drawing
+        </button>
         <div class="details" id="details"></div>
         <form id="sliders" style="display: none;">
-            <label>Mindshare: <input type="range" id="mindshare-slider" min="0" max="100" value="50"></label>
-            <label>Market Cap: <input type="range" id="marketCap-slider" min="0" max="100" value="50"></label>
-            <label>Liquidity: <input type="range" id="liquidity-slider" min="0" max="100" value="50"></label>
-            <label>Price: <input type="range" id="price-slider" min="0" max="100" value="50"></label>
-            <label>Average Engagements Count: <input type="range" id="averageEngagementsCount-slider" min="0" max="100" value="50"></label>
-            <button type="submit">Update</button>
+            <button type="submit" id="update-button" style="display: none;">Update</button>
         </form>
+        <div class="selected-coins"></div>
     </div>
     <div class="container">
         <canvas id="canvas"></canvas>
         <div class="central-circle" id="central-circle">Center</div>
     </div>
+    <a href="/chat" class="chat-icon">
+        💬
+    </a>
     <script src="{{ url_for('static', filename='staticJS/huhJS.js') }}"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/js/all.min.js" crossorigin="anonymous"></script>
+    <script>
+        function adjustNavbarFont() {
+            const baseFontSize = 1.0; // Base font size in em (reduced from 1.5)
+            const minFontSize = 0.4;  // Minimum readable font size in em (reduced from 0.6)
+            const scaleFactor = window.innerWidth / 1920; // Assuming 1920px is the base width
+    
+            // Adjust font size dynamically
+            const newFontSize = Math.max(minFontSize, baseFontSize * scaleFactor);
+    
+            // Apply font size to sidebar elements
+            document.querySelectorAll('.margin, .legend, .legend-item, .details, h1').forEach(el => {
+                el.style.fontSize = `${newFontSize}em`;
+            });
+        }
+    
+        window.addEventListener('resize', adjustNavbarFont);
+        window.addEventListener('load', adjustNavbarFont);
+
+        // Show update button when a coin is clicked
+        document.querySelectorAll('.circle').forEach(coin => {
+            coin.addEventListener('click', () => {
+                document.getElementById('update-button').style.display = 'block';
+            });
+        });
+
+        let drawing = false;
+        let drawTool;
+        let path = [];
+        let highlightedArea = null;
+
+        function toggleDrawTool() {
+            drawing = !drawing;
+            const button = document.querySelector('.draw-tool-button');
+            button.innerHTML = drawing ? '<i class="fas fa-stop"></i> Stop Drawing' : '<i class="fas fa-pencil-alt"></i> Start Drawing';
+            if (!drawing) {
+                document.removeEventListener('mousedown', startDrawing);
+            } else {
+                document.addEventListener('mousedown', startDrawing);
+            }
+        }
+
+        function startDrawing(event) {
+            if (!drawing) return;
+
+            // Remove any existing circle
+            clearDrawing();
+
+            const startX = event.clientX;
+            const startY = event.clientY;
+
+            drawTool = document.createElement('canvas');
+            drawTool.className = 'draw-tool';
+            drawTool.style.position = 'absolute';
+            drawTool.style.top = '0';
+            drawTool.style.left = '0';
+            drawTool.style.pointerEvents = 'none'; // Ensure it doesn't interfere with mouse events
+            drawTool.width = window.innerWidth;
+            drawTool.height = window.innerHeight;
+            document.body.appendChild(drawTool);
+
+            const ctx = drawTool.getContext('2d');
+            ctx.strokeStyle = 'rgba(255, 0, 0, 1)'; // Red color with full opacity
+            ctx.lineWidth = 2;
+            ctx.lineCap = 'round';
+            ctx.lineJoin = 'round';
+            ctx.beginPath();
+            ctx.moveTo(startX, startY);
+
+            document.addEventListener('mousemove', draw);
+            document.addEventListener('mouseup', stopDrawing);
+        }
+
+        function draw(event) {
+            if (!drawing) return;
+
+            const ctx = drawTool.getContext('2d');
+            ctx.lineTo(event.clientX, event.clientY);
+            ctx.stroke();
+
+            path.push({ x: event.clientX, y: event.clientY });
+
+            updateSelectedCoins(); // Update selected coins dynamically
+        }
+
+        function stopDrawing() {
+            if (!drawing) return;
+
+            document.removeEventListener('mousemove', draw);
+            document.removeEventListener('mouseup', stopDrawing);
+
+            if (highlightedArea) {
+                highlightedArea.remove();
+            }
+
+            highlightedArea = document.createElement('canvas');
+            highlightedArea.className = 'highlighted';
+            highlightedArea.width = window.innerWidth;
+            highlightedArea.height = window.innerHeight;
+            document.body.appendChild(highlightedArea);
+
+            const ctx = highlightedArea.getContext('2d');
+            ctx.fillStyle = 'rgba(255, 255, 0, 0.3)'; // Highlight color
+            ctx.clearRect(0, 0, highlightedArea.width, highlightedArea.height); // Clear previous drawings
+            ctx.beginPath();
+            ctx.moveTo(path[0].x, path[0].y);
+            for (let i = 1; i < path.length; i++) {
+                ctx.lineTo(path[i].x, path[i].y);
+            }
+            ctx.closePath(); // Ensure the path is closed
+            ctx.fill();
+
+            updateSelectedCoins();
+
+            drawing = false;
+        }
+
+        function updateSelectedCoins() {
+            const coins = document.querySelectorAll('.circle');
+            const selectedCoins = [];
+
+            coins.forEach(coin => {
+                const coinRect = coin.getBoundingClientRect();
+                const coinCenter = {
+                    x: coinRect.left + coinRect.width / 2,
+                    y: coinRect.top + coinRect.height / 2
+                };
+
+                if (isPointInPath(coinCenter)) {
+                    selectedCoins.push(coin.innerText);
+                }
+            });
+
+            displaySelectedCoins(selectedCoins);
+        }
+
+        function isPointInPath(point) {
+            const ctx = highlightedArea.getContext('2d');
+            ctx.clearRect(0, 0, highlightedArea.width, highlightedArea.height); // Clear previous path
+            ctx.beginPath();
+            ctx.moveTo(path[0].x, path[0].y);
+            for (let i = 1; i < path.length; i++) {
+                ctx.lineTo(path[i].x, path[i].y);
+            }
+            ctx.closePath();
+            return ctx.isPointInPath(point.x, point.y);
+        }
+
+        function displaySelectedCoins(coins) {
+            const selectedCoinsDiv = document.querySelector('.selected-coins');
+            selectedCoinsDiv.innerHTML = `<strong>Selected Coins:</strong><br>${coins.join('<br>')}`;
+        }
+
+        function clearDrawing() {
+            const drawnElements = document.querySelectorAll('.draw-tool');
+            drawnElements.forEach(element => element.remove());
+            if (highlightedArea) {
+                highlightedArea.remove();
+                highlightedArea = null;
+            }
+            path = [];
+            const selectedCoinsDiv = document.querySelector('.selected-coins');
+            selectedCoinsDiv.innerHTML = `<strong>Selected Coins:</strong><br>`;
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const drawButton = document.querySelector('.draw-tool-button');
+            drawButton.addEventListener('click', toggleDrawTool);
+
+            const clearButton = document.querySelector('.clear-drawing-button');
+            clearButton.addEventListener('click', clearDrawing);
+        });
+    </script>
 </body>
 </html>

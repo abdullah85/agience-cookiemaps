@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tutorial</title>
+  <style>
+    body {
+      margin: 0;
+      overflow: hidden;
+      background: black;
+      display: flex;
+      color: white;
+      height: 100vh;
+      font-family: 'Poppins', sans-serif;
+    }
+    .container {
+      width: 80%;
+      margin: auto;
+      background: grey;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+      overflow-y: auto; /* Make the container scrollable */
+      max-height: 90vh; /* Limit the height to make it scrollable */
+    }
+    .screenshot {
+      width: 100%;
+      border-radius: 10px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+      margin-bottom: 20px; /* Add space between screenshots */
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Tutorial</h1>
+    <p>CookieMaps visualizes the blockchain using an AI powered region clustering system. Below you can see the different areas coins are sorted into. Particles show movement of data</p>
+    <img src="{{ url_for('static', filename='example.png') }}" alt="App Screenshot 1" class="screenshot">
+    <p>Hover and click on any coins to get insights straight from Cookie.fun</p>
+    <img src="{{ url_for('static', filename='example2.png') }}" alt="App Screenshot 2" class="screenshot">
+    <p>You see an overview of your data on the dashboard</p>
+    <img src="{{ url_for('static', filename='example3.png') }}" alt="App Screenshot 3" class="screenshot">
+    <p>Access a personalized AI assistant to help with trading decisions</p>
+    <img src="{{ url_for('static', filename='example4.png') }}" alt="App Screenshot 3" class="screenshot">
+    <p>Circle regions to trade in and have a personalized agent do the rest</p>
+    <img src="{{ url_for('static', filename='example5.png') }}" alt="App Screenshot 3" class="screenshot">
+    <!-- Add your tutorial content here -->
+    <button onclick="window.location.href='/chart'" style="display: block; margin: 20px auto; padding: 10px 20px; background-color: #a020f0; color: white; border: none; border-radius: 5px; cursor: pointer; font-size: 16px;">Continue to Chart</button>
+  </div>
+</body>
+</html>

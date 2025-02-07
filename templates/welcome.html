@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap">
+    <title>CookieMaps</title>
+    <style>
+        body {
+            font-family: Poppins, sans-serif;
+            background-color: black;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .container {
+            text-align: center;
+            background-color:#1e1e1e;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            color: #ffffff;
+            font-size: 45px;
+        }
+        p {
+            color: #ffffff;
+        }
+        .button {
+            background-color: #a020f0;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        .button:hover {
+            background-color: #a828f8;
+        }
+        footer {
+            margin-top: 20px;
+            font-size: 12px;
+            color: #fefefe;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>
+            <img src="{{ url_for('static', filename='agience.png') }}" alt="Ageince Logo" style="height: 50px; vertical-align: middle; margin-right: 10px;">
+            CookieMaps
+        </h1>
+        <p>Your gateway to the crypto world. Discover trending cryptocurrencies, AI powered systems and start your investment journey today.</p>
+        <a href="/Tutorial" class="button">Get Started</a>
+        <footer>
+            &copy; Disclaimer! This site is giving not financial advice!
+        </footer>
+    </div>
+</body>
+</html>
