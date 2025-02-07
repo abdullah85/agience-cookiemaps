@@ -124,8 +124,35 @@
             overflow-y: auto;
             margin: 10px 0;
             display: none;
+            scrollbar-width: thin;
+            scroll-behavior: smooth;
+            /* Firefox */
+            scrollbar-color: gray transparent;
+            /* Firefox */
             /* Initially hidden */
         }
+
+        .chatbox .messages::-webkit-scrollbar {
+            height: 5px;
+            /* Thin scrollbar */
+        }
+
+        .chatbox .messages::-webkit-scrollbar-track {
+            background: transparent;
+            /* Invisible track */
+        }
+
+        .chatbox .messages::-webkit-scrollbar-thumb {
+            background: gray;
+            border-radius: 10px;
+            /* Rounded edges */
+        }
+
+        .chatbox .messages::-webkit-scrollbar-thumb:hover {
+            background: darkgray;
+            /* Slightly darker on hover */
+        }
+
 
         .chatbox .message {
             margin-bottom: 15px;
