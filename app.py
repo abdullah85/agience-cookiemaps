@@ -9,7 +9,7 @@ from update_values import update_values, cryptocurrencies
 import threading
 import time
 
-
+from datetime import datetime, timedelta
 
 load_dotenv()
 
@@ -54,12 +54,15 @@ def determine_region(crypto):
     if not regions:
         regions.append("Other")
     return regions
+
 @app.route('/dashboard')
 def dashboard():
     return render_template('dashboard.html')
+
 @app.route('/')
 def welcome():
     return render_template('welcome.html')
+
 @app.route('/chart')
 def hello_world():
     regions = {"Popular on Social Media": [], "Large Market Value": [], "Easy to Buy/Sell": [], "Stable Price": [], "High Community Engagement": [], "Other": []}
@@ -141,11 +144,78 @@ def index():
 def Tutorial():
     return render_template("Tutorial.html")
 
+class CachedCoins:
+    def __init__(self, duration=5, threshold=600):
+        self.duration = duration
+        self.threshold = threshold
+        self.data = {}
+        self.initTime = {} # time to live info
+
+    def updateDuration(self):
+        self.duration *= 2
+        if(self.duration >= self.threshold):
+            self.duration = 5 # reset the time to wait
+
+    def set(self, coin_name, response):
+        self.data[coin_name] = response
+        self.initTime[coin_name] = time.time()
+
+    def get(self, coin_name):
+        if(coin_name in self.initTime.keys()):
+            currDuration = time.time() - self.initTime[coin_name]
+            if(coin_name in self.data.keys() and currDuration <= self.duration):
+                return self.data[coin_name]
+        url = f"https://api.cookie.fun/v1/hackathon/search/{coin_name.replace(' ', '%20')}"
+        headers = {'x-api-key': cookie_api_key}
+        today = datetime.today()
+        prevDate = today - timedelta(days=30)
+        params = {"from": prevDate.strftime('%Y-%mm-%d'), "to": today.strftime('%Y-%mm-%d')}
+        # response = requests.get(url, headers=headers)
+        response = requests.get(url, headers=headers, params=params)
+        # Make the request and send the response and the onus is on the invoker to verify and set
+        return response
+
+coins = CachedCoins()
+
+class CachedPages:
+    def __init__(self, duration=5, threshold=600):
+        self.duration = duration
+        self.threshold = threshold
+        self.data = {}
+        self.initTime = {} # time to live info
+
+    def updateDuration(self):
+        self.duration *= 2
+        if(self.duration >= self.threshold):
+            self.duration = 5 # reset the time to wait
+
+    def set(self, page_number, response):
+        self.data[page_number] = response
+        self.initTime[page_number] = time.time()
+
+    def get(self, page_number):
+        if(page_number in self.initTime.keys()):
+            currDuration = time.time() - self.initTime[page_number]
+            if(page_number in self.data.keys() and currDuration <= self.duration):
+                return self.data[page_number]
+        url = f'https://api.cookie.fun/v2/agents/agentsPaged?interval=_7Days&page={page_number}&pageSize=25'
+        headers = {'x-api-key': cookie_api_key}
+        response = requests.get(url, headers=headers)
+        # Make the request and send the response and the onus is on the invoker to verify and set
+        return response
+
+pages = CachedPages()
+
 def get_coin_value(coin_name):
     try:
-        url = f"v1/hackathon/search/{coin_name.replace(' ', '%20')}"
-        params = {"from": "2025-01-01", "to": "2025-01-20"}
-        data = fetch_from_cookie_api(url, params)
+        # url = f"v1/hackathon/search/{coin_name.replace(' ', '%20')}"
+        # params = {"from": "2025-01-01", "to": "2025-01-20"}
+        # data = fetch_from_cookie_api(url, params)
+        data = coins.get(coin_name)
+        if(data.status_code != 200):
+            coins.updateDuration()
+        else:
+            data=data.json()
         return data
     except Exception as e:
         print(f"Error fetching value for {coin_name}: {e}")
@@ -171,9 +241,18 @@ def query_openai():
                 coin_values[coin] = coin_value
                 print(f"Value for {coin}: {coin_value}")
 
-        url = "v2/agents/agentsPaged"
-        params = {"interval": "_7Days", "page": 1, "pageSize": 10}
-        cookie_data = fetch_from_cookie_api(url, params)
+        # url = "v2/agents/agentsPaged"
+        # params = {"interval": "_7Days", "page": 1, "pageSize": 10}
+        # cookie_data = fetch_from_cookie_api(url, params)
+
+        cookie_data = pages.get(page_number=1)
+        if cookie_data.status_code != 200:
+            # Update duration and log the error message
+            pages.updateDuration()
+            print(cookie_data)
+            cookie_data = {}
+        else:
+            cookie_data = cookie_data.json()
 
         prompt = f"""Here is the data fetched from the Cookie API:
         {cookie_data}
