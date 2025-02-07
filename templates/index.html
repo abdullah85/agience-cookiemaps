@@ -268,6 +268,19 @@
             font-size: 18px;
             text-align: center;
         }
+
+        .container {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            background-color: #211f25; /* Change background color */
+            background-image: linear-gradient(to right, #ccc 1px, transparent 1px), linear-gradient(to bottom, #ccc 1px, transparent 1px);
+            background-size: 20px 20px; /* Adjust the size of the grid */
+        }
+
+        canvas {
+            background-color: transparent; /* Make the canvas transparent */
+        }
     </style>
 </head>
 
@@ -418,6 +431,9 @@
             drawTool.className = 'draw-tool';
             drawTool.width = window.innerWidth;
             drawTool.height = window.innerHeight;
+            drawTool.style.position = 'absolute';
+            drawTool.style.top = '0';
+            drawTool.style.left = '0';
             document.body.appendChild(drawTool);
 
             const ctx = drawTool.getContext('2d');

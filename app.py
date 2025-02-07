@@ -265,7 +265,7 @@ def query_openai():
 
         Based on this data, answer the following question: {question}
 
-        Do not use any pre-trained knowledge; base your response solely on the provided data. Keep your responses short and concise, while still being helpful and professional. Do not show any thinking processes and don't mention you are using Cookie API or LangChain. Round all values to nearest 10th if above 10 and nearest thousandth if below."""
+        Do not use any pre-trained knowledge; base your response solely on the provided data. Keep your responses under 30 words. Do not show any thinking processes and don't mention you are using Cookie API or LangChain. Round all values to nearest 10th if above 10 and nearest thousandth if below."""
 
         response = query_langchain(prompt)
         return jsonify({"openai_response": response})
@@ -282,7 +282,7 @@ def get_twitter_cookie(username):
         prompt = f"""Here is the Twitter data for {username} fetched from the Cookie API:
         {data}
 
-        Analyze this data and provide insights on the activity trends of this user. Do not use any pre-trained knowledge; base your response solely on the provided data.Keep your responses short and consise. while still being helpful and professional. do not show any thinking processes and dont mention you are using cookie api or langchain. round all values to nearest 10th if above 10 and nearest thousanth if below"""
+        Analyze this data and provide insights on the activity trends of this user. Do not use any pre-trained knowledge; base your response solely on the provided data. Keep your responses under 30 words. Do not show any thinking processes and don't mention you are using Cookie API or LangChain. Round all values to nearest 10th if above 10 and nearest thousandth if below."""
         langchain_response = query_langchain(prompt)
 
         return jsonify({"cookie_data": data, "langchain_response": langchain_response})
@@ -299,7 +299,7 @@ def get_contract_cookie(contract_address):
         prompt = f"""Here is the smart contract data fetched from the Cookie API:
         {data}
 
-        Analyze this data and provide insights on usage trends. Do not use any pre-trained knowledge; base your response solely on the provided data. Keep your responses short and consise. while still being helpful and professional. do not show any thinking processes and dont mention you are using cookie api or langchain. round all values to nearest 10th if above 10 and nearest thousanth if below"""
+        Analyze this data and provide insights on usage trends. Do not use any pre-trained knowledge; base your response solely on the provided data. Keep your responses under 30 words. Do not show any thinking processes and don't mention you are using Cookie API or LangChain. Round all values to nearest 10th if above 10 and nearest thousandth if below."""
         langchain_response = query_langchain(prompt)
 
         return jsonify({"cookie_data": data, "langchain_response": langchain_response})
@@ -319,7 +319,7 @@ def get_agents():
         prompt = f"""Here is the list of agents fetched from the Cookie API:
         {data}
 
-        Summarize key trends among them. Do not use any pre-trained knowledge; base your response solely on the provided data.Keep your responses short and consise. while still being helpful and professional. do not show any thinking processes and dont mention you are using cookie api or langchain. round all values to nearest 10th if above 10 and nearest thousanth if below"""
+        Summarize key trends among them. Do not use any pre-trained knowledge; base your response solely on the provided data. Keep your responses under 30 words. Do not show any thinking processes and don't mention you are using Cookie API or LangChain. Round all values to nearest 10th if above 10 and nearest thousandth if below."""
         langchain_response = query_langchain(prompt)
 
         return jsonify({"cookie_data": data, "langchain_response": langchain_response})
@@ -340,7 +340,7 @@ def search_cookie_token():
         prompt = f"""Here is the cookie data fetched from the Cookie API:
         {data}
 
-        Answer the following query about the token: {query}. Do not use any pre-trained knowledge; base your response solely on the provided data.Keep your responses short and consise. while still being helpful and professional. do not show any thinking processes and dont mention you are using cookie api or langchain. round all values to nearest 10th if above 10 and nearest thousanth if below"""
+        Answer the following query about the token: {query}. Do not use any pre-trained knowledge; base your response solely on the provided data. Keep your responses under 30 words. Do not show any thinking processes and don't mention you are using Cookie API or LangChain. Round all values to nearest 10th if above 10 and nearest thousandth if below."""
         langchain_response = query_langchain(prompt)
 
         return jsonify({"cookie_data": data, "langchain_response": langchain_response})
