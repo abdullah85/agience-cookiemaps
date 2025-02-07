@@ -29,11 +29,29 @@ app.add_middleware(
 plugin_path = os.path.abspath(os.path.join(os.path.dirname(__file__), '../langchain_plugins'))
 sys.path.append(plugin_path)
 
-llm = ChatOpenAI(model_name="gpt-3.5-turbo", api_key=api_key)
+llm = ChatOpenAI(model_name="gpt-4o-mini", api_key=api_key)
 
 def query_langchain(prompt: str):
     try:
-        response = llm.invoke(prompt)
+        # Use system message to define the LLM's role
+        messages = [
+            SystemMessage(content="""
+                          
+                          You are an expert cryptocurrency advisor and teacher. Your goal is to help beginners understand cryptocurrency concepts, trends, and insights in a clear and educational manner.
+                                     
+                          You may discuss the cryptocurrency and the market in depth using the data provided as a guide.
+                                     
+                          Do not use phrases like 'Based on the data provided', just answer like a human advisor. Your response targets a novice and should explain concepts like you would to a five year old. Don't just ramble off facts.
+
+                          Mindshare refers to the concepts of awareness or attention of the cryptocurrency within the overall market.
+                          
+                          """
+                                  
+                                  ),
+            HumanMessage(content=prompt)
+        ]
+
+        response = llm.invoke(messages)
 
         if hasattr(response, 'content'):
             return response.content 
@@ -106,7 +124,7 @@ async def get_twitter_cookie(username: str, interval: str = "_7Days"):
         prompt = f"""Here is the Twitter data for {username} fetched from the Cookie API:
         {data}
 
-        Analyze this data and provide insights on the activity trends of this user. Do not use any pre-trained knowledge; base your response solely on the provided data."""
+        Analyze this data and provide insights on this user's activity trends, offering tailored recommendations to enhance their understanding and decision-making. Base your response solely on the provided data."""
         langchain_response = query_langchain(prompt)
 
         return {"cookie_data": data, "langchain_response": langchain_response}
@@ -122,7 +140,7 @@ async def get_contract_cookie(contract_address: str, interval: str = "_7Days"):
         prompt = f"""Here is the smart contract data fetched from the Cookie API:
         {data}
 
-        Analyze this data and provide insights on usage trends. Do not use any pre-trained knowledge; base your response solely on the provided data."""
+        Analyze this data and provide insights on cryptocurrency usage trends, explaining the factors driving changes and their implications. Base your response solely on the provided data."""
         langchain_response = query_langchain(prompt)
 
         return {"cookie_data": data, "langchain_response": langchain_response}
@@ -139,7 +157,7 @@ async def get_agents(interval: str = "_7Days", page: int = 1, page_size: int = 1
         prompt = f"""Here is the list of agents fetched from the Cookie API:
         {data}
 
-        Summarize key trends among them. Do not use any pre-trained knowledge; base your response solely on the provided data."""
+        Summarize key trends among cryptocurrencies, identifying patterns in adoption, trading volume, and technological advancements. Base your response solely on the provided data."""
         langchain_response = query_langchain(prompt)
 
         return {"cookie_data": data, "langchain_response": langchain_response}
@@ -157,7 +175,7 @@ async def search_cookie_token(query: str, from_date: str, to_date: str):
         prompt = f"""Here is the cookie data fetched from the Cookie API:
         {data}
 
-        Answer the following query about the token: {query}. Do not use any pre-trained knowledge; base your response solely on the provided data."""
+        Answer the following query about the token: {query}. Explain its significance, use cases, and potential impact, ensuring clarity for a beginner. Base your response solely on the provided data."""
         langchain_response = query_langchain(prompt)
 
         return {"cookie_data": data, "langchain_response": langchain_response}
