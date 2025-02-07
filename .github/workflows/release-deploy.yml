@@ -47,4 +47,4 @@ jobs:
             docker pull ${{ secrets.AWS_ECR_REPO_URI }}:latest
             docker stop cookiemaps || true
             docker rm cookiemaps || true
-            docker run -d --name cookiemaps --env-file .env -p 8000:8000 ${{ secrets.AWS_ECR_REPO_URI }}:latest
+            docker run -d --name cookiemaps --env-file .env -p 8000:8000 ${{ secrets.AWS_ECR_REPO_URI }}:latest 
