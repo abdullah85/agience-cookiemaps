@@ -259,5 +259,37 @@ async function fetchData() {
     }
 }
 
+document.addEventListener('DOMContentLoaded', async function () {
+    const response = await fetch('https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=10&page=1&sparkline=false');
+    const data = await response.json();
+    displayTopCoins(data);
+});
+
+function displayTopCoins(coins) {
+    const carousel = document.getElementById('top-coins-carousel');
+    carousel.innerHTML = '';
+    coins.forEach(coin => {
+        const change = coin.price_change_percentage_24h;
+        const changeClass = change >= 0 ? 'green' : 'red';
+        const changeSymbol = change >= 0 ? '↑' : '↓';
+        const card = document.createElement('div');
+        card.className = 'coin-card';
+        card.innerHTML = `
+            <h3>${coin.name}</h3>
+            <p>Price: $${coin.current_price.toFixed(2)}</p>
+            <p class="${changeClass}">${changeSymbol} ${Math.abs(change).toFixed(2)}%</p>
+        `;
+        card.dataset.coinId = coin.id;
+        carousel.appendChild(card);
+    });
+}
+
+document.getElementById('top-coins-carousel').addEventListener('click', function (e) {
+    if (e.target.closest('.coin-card')) {
+        const coinId = e.target.closest('.coin-card').dataset.coinId;
+        fetchCoinData(coinId, '1D');
+    }
+});
+
 setInterval(fetchData, 5000);
 animate();
