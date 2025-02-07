@@ -28,7 +28,7 @@ app = Flask(__name__)
 plugin_path = os.path.abspath(os.path.join(os.path.dirname(__file__), 'llm_integration/langchain_plugins'))
 sys.path.append(plugin_path)
 
-llm = ChatOpenAI(model_name="gpt-3.5-turbo", api_key=api_key)
+llm = ChatOpenAI(model_name="gpt-4o-mini", api_key=api_key)
 
 # Load coin names from JSON file
 with open('coin_names.json', 'r') as file:
