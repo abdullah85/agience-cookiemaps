@@ -389,10 +389,6 @@
 
             drawTool = document.createElement('canvas');
             drawTool.className = 'draw-tool';
-            drawTool.style.position = 'absolute';
-            drawTool.style.top = '0';
-            drawTool.style.left = '0';
-            drawTool.style.pointerEvents = 'none'; // Ensure it doesn't interfere with mouse events
             drawTool.width = window.innerWidth;
             drawTool.height = window.innerHeight;
             document.body.appendChild(drawTool);
@@ -594,6 +590,9 @@
             }
         });
 
+        function adjustZoom(value) {
+            document.documentElement.style.setProperty('--zoom-level', value);
+        }
     </script>
 </body>
 

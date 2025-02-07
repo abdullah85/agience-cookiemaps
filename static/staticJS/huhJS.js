@@ -293,3 +293,62 @@ document.getElementById('top-coins-carousel').addEventListener('click', function
 
 setInterval(fetchData, 5000);
 animate();
+
+function startDrawing(event) {
+    if (!drawing) return;
+
+    // Remove any existing circle
+    clearDrawing();
+
+    const startX = event.clientX;
+    const startY = event.clientY;
+
+    drawTool = document.createElement('canvas');
+    drawTool.className = 'draw-tool';
+    drawTool.width = window.innerWidth;
+    drawTool.height = window.innerHeight;
+    document.body.appendChild(drawTool);
+
+    const ctx = drawTool.getContext('2d');
+    ctx.strokeStyle = 'rgba(255, 0, 0, 1)'; // Red color with full opacity
+    ctx.lineWidth = 2;
+    ctx.lineCap = 'round';
+    ctx.lineJoin = 'round';
+    ctx.beginPath();
+    ctx.moveTo(startX, startY);
+
+    document.addEventListener('mousemove', draw);
+    document.addEventListener('mouseup', stopDrawing);
+}
+
+function stopDrawing() {
+    if (!drawing) return;
+
+    document.removeEventListener('mousemove', draw);
+    document.removeEventListener('mouseup', stopDrawing);
+
+    if (highlightedArea) {
+        highlightedArea.remove();
+    }
+
+    highlightedArea = document.createElement('canvas');
+    highlightedArea.className = 'highlighted';
+    highlightedArea.width = window.innerWidth;
+    highlightedArea.height = window.innerHeight;
+    document.body.appendChild(highlightedArea);
+
+    const ctx = highlightedArea.getContext('2d');
+    ctx.fillStyle = 'rgba(255, 255, 0, 0.3)'; // Highlight color
+    ctx.clearRect(0, 0, highlightedArea.width, highlightedArea.height); // Clear previous drawings
+    ctx.beginPath();
+    ctx.moveTo(path[0].x, path[0].y);
+    for (let i = 1; i < path.length; i++) {
+        ctx.lineTo(path[i].x, path[i].y);
+    }
+    ctx.closePath(); // Ensure the path is closed
+    ctx.fill();
+
+    updateSelectedCoins();
+
+    drawing = false;
+}

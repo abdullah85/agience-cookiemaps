@@ -4,6 +4,9 @@ import requests
 import math
 import random
 import os
+from dotenv import load_dotenv
+
+load_dotenv()
 
 use_random_values = False  # Set to False to use real data
 move_amount_high = 1  # Variable to control the amount the coins move by when high

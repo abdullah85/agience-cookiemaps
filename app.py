@@ -241,28 +241,31 @@ def query_openai():
                 coin_values[coin] = coin_value
                 print(f"Value for {coin}: {coin_value}")
 
-        # url = "v2/agents/agentsPaged"
-        # params = {"interval": "_7Days", "page": 1, "pageSize": 10}
-        # cookie_data = fetch_from_cookie_api(url, params)
-
-        cookie_data = pages.get(page_number=1)
-        if cookie_data.status_code != 200:
-            # Update duration and log the error message
-            pages.updateDuration()
-            print(cookie_data)
-            cookie_data = {}
-        else:
-            cookie_data = cookie_data.json()
+        # Filter data for mentioned coins
+        filtered_data = {
+            "ok": {
+                "data": [
+                    {
+                        **crypto,
+                        "topTweets": crypto.get("topTweets", [])[:4]  # Limit to 3-4 tweets
+                    }
+                    for crypto in cryptocurrencies
+                    if crypto["agentName"].lower() in [coin.lower() for coin in mentioned_coins]
+                ]
+            },
+            "success": True,
+            "error": None
+        }
 
         prompt = f"""Here is the data fetched from the Cookie API:
-        {cookie_data}
+        {filtered_data}
 
         Here are the values for the mentioned coins:
         {coin_values}
 
         Based on this data, answer the following question: {question}
 
-        Do not use any pre-trained knowledge; base your response solely on the provided data. Keep your responses short and consise. while still being helpful and professional. do not show any thinking processes and dont mention you are using cookie api or langchain. round all values to nearest 10th if above 10 and nearest thousanth if below"""
+        Do not use any pre-trained knowledge; base your response solely on the provided data. Keep your responses short and concise, while still being helpful and professional. Do not show any thinking processes and don't mention you are using Cookie API or LangChain. Round all values to nearest 10th if above 10 and nearest thousandth if below."""
 
         response = query_langchain(prompt)
         return jsonify({"openai_response": response})
