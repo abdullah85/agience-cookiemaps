@@ -1,39 +1,46 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cookiemaps</title>
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap">
+    <title>Agience CookieMaps</title>
+    <link rel="icon" type="image/png" sizes="32x32" href="../static/favicon.png">
+    <meta name="description" content="An interactive map to explore crypto coins and value.">
+    <meta name="keywords" content="crypto, AI agents, bitcoin, ethereum, interactive map">
+    <!-- <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap"> -->
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap"
+        rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Sora:wght@100..800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="{{ url_for('static', filename='huhCSS.css') }}">
     <style>
-        .draw-tool-button, .clear-drawing-button {
-            padding: 10px 20px;
-            background-color: #000;
-            color: #fff;
-            border: none;
-            cursor: pointer;
-            font-size: 16px;
-            margin-bottom: 10px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', sans-serif;
         }
-        .draw-tool-button i, .clear-drawing-button i {
+
+        .draw-tool-button i,
+        .clear-drawing-button i {
             margin-right: 5px;
         }
+
         .highlighted {
             position: absolute;
             top: 0;
             left: 0;
             pointer-events: none;
         }
+
         .selected-coins {
             background-color: #fff;
             color: #000;
             padding: 10px;
             border-radius: 5px;
             margin-top: 20px;
+            width: 160px;
         }
 
         /*chatbot*/
@@ -43,7 +50,7 @@
             right: 20px;
             width: 350px;
             border-radius: 12px;
-            background: rgba(255, 255, 255, 0.1);
+            background: rgb(1, 1, 1);
             padding: 20px;
             box-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
             color: white;
@@ -53,17 +60,18 @@
             transition: backdrop-filter 0.3s ease;
             z-index: 1000;
         }
-        
+
         @keyframes glow {
             0% {
-                box-shadow: 0 0 10px rgba(0, 255, 255, 0.5), 
-                            0 0 20px rgba(255, 0, 255, 0.5), 
-                            0 0 30px rgba(255, 0, 255, 0.5);
+                box-shadow: 0 0 10px rgba(0, 255, 255, 0.5),
+                    0 0 20px rgba(255, 0, 255, 0.5),
+                    0 0 30px rgba(255, 0, 255, 0.5);
             }
+
             100% {
-                box-shadow: 0 0 10px rgba(0, 255, 255, 0.5), 
-                            0 0 20px rgba(255, 0, 255, 0.5), 
-                            0 0 30px rgba(0, 0, 255, 0.5);
+                box-shadow: 0 0 10px rgba(0, 255, 255, 0.5),
+                    0 0 20px rgba(255, 0, 255, 0.5),
+                    0 0 30px rgba(0, 0, 255, 0.5);
             }
         }
 
@@ -78,13 +86,14 @@
             0% {
                 background-position: 0% 50%;
             }
+
             100% {
                 background-position: 100% 50%;
             }
         }
 
 
-        
+
         .chatbox .header {
             display: flex;
             justify-content: space-between;
@@ -114,7 +123,8 @@
             height: 200px;
             overflow-y: auto;
             margin: 10px 0;
-            display: none; /* Initially hidden */
+            display: none;
+            /* Initially hidden */
         }
 
         .chatbox .message {
@@ -147,15 +157,15 @@
             border-radius: 8px;
             border: none;
             outline: none;
-            background: rgba(255, 255, 255, 0.1);
-            color: white;
+            background: white;
+            color: black;
         }
 
         .chatbox .send-btn {
             margin-left: 10px;
             padding: 10px 15px;
-            background: rgb(252, 169, 15);
-            color: black;
+            background: #2A0052;
+            color: white;
             font-weight: 700;
             border: none;
             border-radius: 6px;
@@ -163,7 +173,8 @@
         }
 
         .chatbox .send-btn:hover {
-            background: orange;
+            background: white;
+            color: black;
         }
 
         .chatbox .loading-overlay {
@@ -180,7 +191,8 @@
             z-index: 1000;
             backdrop-filter: blur(10px);
             border-radius: 10px;
-            display: none; /* Initially hidden */
+            display: none;
+            /* Initially hidden */
         }
 
         .chatbox .pulsating-circle {
@@ -197,10 +209,12 @@
                 transform: scale(1);
                 opacity: 0.7;
             }
+
             50% {
                 transform: scale(1.2);
                 opacity: 1;
             }
+
             100% {
                 transform: scale(1);
                 opacity: 0.7;
@@ -211,9 +225,11 @@
             0% {
                 background-position: 0% 50%;
             }
+
             50% {
                 background-position: 100% 50%;
             }
+
             100% {
                 background-position: 0% 50%;
             }
@@ -227,56 +243,80 @@
         }
     </style>
 </head>
+
 <body>
-    <div class="margin" id="navbar">
-        <h1>
-            <a href="{{ url_for('dashboard') }}" style="color: white; text-decoration: none;">
-                <img src="{{ url_for('static', filename='agience.png') }}" alt="Ageince Logo" style="height: 40px; vertical-align: middle; margin-right: 10px;">
-                CookieMaps
-            </a>
-        </h1>
-        <div class="legend">
-            <div class="legend-item">
-                <div class="legend-color" style="background-color: green;"></div>
-                Popular on Social Media
+    <!-- Column 1 -->
+    <div class="nav-container">
+        <div class="margin" id="navbar">
+            <div class="text-logo">
+                <a href="{{ url_for('dashboard') }}" class="logo-link">
+                    <img src="{{ url_for('static', filename='agience.png') }}" alt="Agience Logo" class="logo">
+                    <span class="logo-text">CookieMaps</span>
+                </a>
             </div>
-            <div class="legend-item">
-                <div class="legend-color" style="background-color: orange;"></div>
-                Large Market Value
+
+            <hr style="width: 100%;">
+            <div class="legend">
+                <div class="legend-header">
+                    <h1>Legend</h1>
+                    <img src="{{ url_for('static', filename='cookie.png') }}" alt="Legend Icon"
+                        style="margin-left: 10px;" class="legend-icon">
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color" style="background-color: green;"></div>
+                    <p class="legend-text">Popular on Social Media</p>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color" style="background-color: orange;"></div>
+                    <p class="legend-text">Large Market Value</p>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color" style="background-color: red;"></div>
+                    <p class="legend-text">Easy to Buy/Sell</p>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color" style="background-color: gray;"></div>
+                    <p class="legend-text">Stable Price</p>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color" style="background-color: blue;"></div>
+                    <p class="legend-text">High Community Engagement</p>
+                </div>
             </div>
-            <div class="legend-item">
-                <div class="legend-color" style="background-color: red;"></div>
-                Easy to Buy/Sell
+            <div class="draw-group">
+                <button class="draw-tool-button start-button">
+                    <i class="fas fa-pencil-alt" style="margin-right: 8px;"></i> Start Drawing
+                </button>
             </div>
-            <div class="legend-item">
-                <div class="legend-color" style="background-color: gray;"></div>
-                Stable Price
+            <div class="draw-group">
+                <button class="clear-drawing-button clear-button">
+                    <i class="fas fa-eraser" style="margin-right: 8px;"></i> Clear Drawing
+                </button>
+                </button>
             </div>
-            <div class="legend-item">
-                <div class="legend-color" style="background-color: blue;"></div>
-                High Community Engagement
-            </div>
+            <div class="details" id="details"></div>
+            <form id="sliders" style="display: none;">
+                <button type="submit" id="update-button" style="display: none;">Update</button>
+            </form>
+            <div class="selected-coins"></div>
         </div>
-        <button class="draw-tool-button">
-            <i class="fas fa-pencil-alt"></i> Start Drawing
-        </button>
-        <button class="clear-drawing-button">
-            <i class="fas fa-eraser"></i> Clear Drawing
-        </button>
-        <div class="details" id="details"></div>
-        <form id="sliders" style="display: none;">
-            <button type="submit" id="update-button" style="display: none;">Update</button>
-        </form>
-        <div class="selected-coins"></div>
     </div>
+
+    <!-- Column 2 -->
     <div class="container">
         <canvas id="canvas"></canvas>
-        <div class="central-circle" id="central-circle">Center</div>
+        <div class="central-circle" id="central-circle"></div>
     </div>
-   
+
+    <!-- column 3 -->
+    <div class="top-coins-container">
+        <h2 style="margin-top: 40px; text-align: center;">Top 10 Market Value Coins</h2>
+        <div id="top-coins-carousel" class="carousel"></div>
+    </div>
+
     <div class="chatbox" id="chatbox">
         <div class="header">
-            <span class="title">AgienceMind</span>
+            <span class="chat-title">AgienceMind</span>
             <div class="balance">
                 <img src="https://upload.wikimedia.org/wikipedia/commons/4/46/Bitcoin.svg" alt="Bitcoin Logo">
                 <span id="balance-amount">$0.00</span>
@@ -294,22 +334,24 @@
     </div>
 
     <script src="{{ url_for('static', filename='staticJS/huhJS.js') }}"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/js/all.min.js" crossorigin="anonymous"></script>
+    <script src="{{ url_for('static', filename='staticJS/coinGraph.js') }}"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/js/all.min.js"
+        crossorigin="anonymous"></script>
     <script>
         function adjustNavbarFont() {
             const baseFontSize = 1.0; // Base font size in em (reduced from 1.5)
             const minFontSize = 0.4;  // Minimum readable font size in em (reduced from 0.6)
             const scaleFactor = window.innerWidth / 1920; // Assuming 1920px is the base width
-    
+
             // Adjust font size dynamically
             const newFontSize = Math.max(minFontSize, baseFontSize * scaleFactor);
-    
+
             // Apply font size to sidebar elements
-            document.querySelectorAll('.margin, .legend, .legend-item, .details, h1').forEach(el => {
+            document.querySelectorAll('.margin, .legend, .legend-item, .details, h4').forEach(el => {
                 el.style.fontSize = `${newFontSize}em`;
             });
         }
-    
+
         window.addEventListener('resize', adjustNavbarFont);
         window.addEventListener('load', adjustNavbarFont);
 
@@ -328,7 +370,7 @@
         function toggleDrawTool() {
             drawing = !drawing;
             const button = document.querySelector('.draw-tool-button');
-            button.innerHTML = drawing ? '<i class="fas fa-stop"></i> Stop Drawing' : '<i class="fas fa-pencil-alt"></i> Start Drawing';
+            button.innerHTML = drawing ? '<i class="fas fa-redo-alt reset-button" style="margin-right:5px"></i> Reset Drawing' : '<i class="fas fa-pencil-alt"></i> Start Drawing';
             if (!drawing) {
                 document.removeEventListener('mousedown', startDrawing);
             } else {
@@ -526,7 +568,7 @@
                 botMessageElement.className = 'message bot';
                 botMessageElement.innerHTML = '<strong>Bot:</strong> ';
                 chatMessages.appendChild(botMessageElement);
-                
+
                 // Hide loading overlay immediately before starting to type the response
                 document.getElementById('loading-overlay').style.display = 'none'; // Hide loading overlay
                 document.getElementById('chatbox').style.animation = ''; // Remove glow effect
@@ -545,7 +587,7 @@
             }
         }
 
-        document.getElementById('user-input').addEventListener('keypress', function(event) {
+        document.getElementById('user-input').addEventListener('keypress', function (event) {
             if (event.key === 'Enter') {
                 event.preventDefault();
                 sendMessage();
@@ -554,4 +596,5 @@
 
     </script>
 </body>
+
 </html>

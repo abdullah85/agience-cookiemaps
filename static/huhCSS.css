@@ -1,13 +1,31 @@
-body { 
-    margin: 0; 
-    overflow: hidden; 
-    background: black; 
-    display: flex; 
-    color: white; 
-    height: 100vh; 
-    font-family: 'Montserrat', sans-serif;
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Inter', sans-serif;
 }
-canvas { display: block; }
+
+
+body {
+    margin: 0;
+    overflow: hidden;
+    background: black;
+    display: flex;
+    color: white;
+    height: 100vh;
+}
+
+canvas {
+    display: block;
+    display: block;
+    background-color: #211f26;
+    /* Dark background */
+    background-image:
+        linear-gradient(rgba(18, 8, 42, 0.822) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(18, 8, 42, 0.822) 1px, transparent 1px);
+    background-size: 20px 20px;
+}
+
 .circle {
     width: 50px;
     height: 50px;
@@ -20,48 +38,258 @@ canvas { display: block; }
     font-weight: bold;
     text-align: center;
     font-size: 10px;
-    transition: left 1s, top 1s; /* Smooth transition */
+    transition: left 1s, top 1s;
+    /* Smooth transition */
 }
+
 .circle:hover {
-    box-shadow: 0 4px 8px rgba(255, 101, 255, 0.575); /* Add drop shadow on hover */
-    transform: scale(1.1); /* Slightly increase size on hover */
+    box-shadow: 0 4px 8px rgba(255, 101, 255, 0.575);
+    /* Add drop shadow on hover */
+    transform: scale(1.1);
+    /* Slightly increase size on hover */
 }
+
 .margin {
-    width: 12%;
-    background-color: #333;
-    padding: 20px;
-    box-shadow: 2px 0 5px rgba(0,0,0,0.1);
-    z-index: 10; /* Ensure the sidebar is in front */
-    position: relative; /* Ensure the sidebar is in front */
-    font-size: 0.8em; /* Base font size reduced from 1em */
-    transform-origin: top left; /* Set the origin for scaling */
-    overflow-y: auto; /* Add vertical scroll if content overflows */
-    overflow-x: hidden; /* Prevent horizontal scrolling */
-    max-height: 100vh; /* Ensure the sidebar does not exceed the viewport height */
+    min-width: 140px;
+    background-color: #1e1e2f;
     display: flex;
-    flex-direction: column; /* Ensure children are stacked vertically */
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    padding: 16px;
+    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+    z-index: 10;
+    /* Ensure the sidebar is in front */
+    position: relative;
+    /* Ensure the sidebar is in front */
+    font-size: 0.8em;
+    /* Base font size reduced from 1em */
+    transform-origin: top left;
+    /* Set the origin for scaling */
+    overflow-y: auto;
+    /* Add vertical scroll if content overflows */
+    overflow-x: hidden;
+    /* Prevent horizontal scrolling */
+    height: 100vh;
+    /* Ensure the sidebar does not exceed the viewport height */
+    display: flex;
+    flex-direction: column;
+    /* Ensure children are stacked vertically */
 }
-.legend {
-    background: white;
-    color: black;
-    padding: 10px;
-    border: 1px solid #ccc;
+
+.text-logo {
+    display: flex;
+}
+
+.text-logo {
+    display: flex;
+    align-items: center;
+    /* Vertically center logo and text */
+}
+
+.logo-link {
+    display: flex;
+    align-items: center;
+    text-decoration: none;
+    color: white;
+}
+
+.logo {
+    height: 40px;
+    margin-right: 10px;
+}
+
+.logo-text {
+    font-size: 28px;
+    margin: 0;
+    /* Remove default h1 margin */
+}
+
+.draw-group {
+    display: flex;
+    row-gap: 10px;
+}
+
+.start-button {
+    background-color: #BBF7D0;
+    color: #04441b;
+    border: none;
+    width: 165px;
+    height: 48px;
+    padding: 15px 12px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
     border-radius: 5px;
-    margin-bottom: 20px;
-    font-size: 0.6em; /* Base font size reduced from 0.8em */
-    flex-shrink: 0; /* Prevent shrinking */
+    transition: background-color 0.3s ease;
 }
+
+.start-button:hover {
+    background-color: white;
+    color: black
+}
+
+/* Clear Button */
+.clear-button {
+    background-color: black;
+    color: white;
+    border: none;
+    min-width: 165px;
+    height: 48px;
+    padding: 15px 12px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    border-radius: 5px;
+    transition: background-color 0.3s ease;
+}
+
+.clear-button:hover {
+    background-color: #fb8c00;
+}
+
+.legend-header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 18px;
+}
+
+@keyframes bounce {
+
+    0%,
+    100% {
+        transform: translateY(0);
+    }
+
+    50% {
+        transform: translateY(-5px);
+    }
+}
+
+.legend-icon {
+    width: 30px;
+    height: 30px;
+    margin-right: 10px;
+    animation: bounce 1s infinite;
+}
+
+
 .legend-item {
     display: flex;
     align-items: center;
+    background: rgba(255, 255, 255, 0.1);
+    /* Semi-transparent white for gloss */
+    border-radius: 10px;
+    padding: 10px;
+    width: 90%;
+    margin-bottom: 10px;
+    backdrop-filter: blur(8px);
+    /* Soft blur for a glassy effect */
+    box-shadow: inset 2px 2px 5px rgba(255, 255, 255, 0.2),
+        inset -2px -2px 5px rgba(0, 0, 0, 0.2);
+}
+
+.legend-color {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    margin-right: 12px;
+}
+
+.legend-text {
+    font-size: 16px;
+}
+
+.legend {
+    margin-top: 50px;
+    color: white;
+    width: 300px;
+    padding-left: 20px;
+    margin-bottom: 20px;
+    font-size: 0.6em;
+    flex-shrink: 0;
+}
+
+/*
+.legend-item {
+    display: flex;
+    font-size: 12px;
+    align-items: center;
     margin-bottom: 5px;
 }
+
 .legend-color {
-    width: 20px;
-    height: 20px;
+    width: 10px;
+    height: 10px;
     border-radius: 50%;
     margin-right: 10px;
 }
+
+.legend-text {
+    font-size: 16px;
+} */
+
+
+/* coinslist */
+.nav-container {
+    width: 22%;
+    height: 100vh;
+}
+
+#top-coins-carousel {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.top-coins-container {
+    display: flex;
+    flex-direction: column;
+    gap: 50px;
+    padding: 10px;
+    width: 18%;
+}
+
+.coin-card {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: rgba(255, 255, 255, 0.1);
+    /* Subtle background */
+    padding: 10px;
+    border-radius: 8px;
+    backdrop-filter: blur(5px);
+    color: white;
+    font-size: 14px;
+    transition: transform 0.2s ease-in-out;
+}
+
+.coin-card:hover {
+    transform: scale(1.05);
+}
+
+.coin-card h3 {
+    margin: 0;
+    font-size: 16px;
+    flex: 1;
+}
+
+.coin-card p {
+    margin: 0;
+    flex: 1;
+    text-align: center;
+}
+
+.green {
+    color: #4CAF50;
+    /* Green for positive change */
+}
+
+.red {
+    color: #E91E63;
+    /* Red for negative change */
+}
+
 .container {
     position: relative;
     flex-grow: 1;
@@ -69,17 +297,24 @@ canvas { display: block; }
     background-color: black;
     overflow: hidden;
 }
+
 .details {
-    background: rgba(0, 0, 0, 0.8);
+    background: rgba(24, 24, 24, 0.8);
     padding: 20px;
     border-radius: 10px;
     color: white;
     margin-top: 20px;
-    flex-shrink: 0; /* Prevent shrinking */
-    overflow-y: auto; /* Add vertical scroll if content overflows */
-    overflow-x: hidden; /* Prevent horizontal scrolling */
-    max-height: calc(100vh - 40px); /* Ensure the details section does not exceed the viewport height */
-    font-size: 0.8em; /* Base font size reduced from 1em */
+    width: 160px;
+    flex-shrink: 0;
+    /* Prevent shrinking */
+    overflow-y: auto;
+    /* Add vertical scroll if content overflows */
+    overflow-x: hidden;
+    /* Prevent horizontal scrolling */
+    max-height: calc(100vh - 40px);
+    /* Ensure the details section does not exceed the viewport height */
+    font-size: 1em;
+    /* Base font size reduced from 1em */
 }
 
 .drawing-buttons {
@@ -109,53 +344,74 @@ canvas { display: block; }
     margin-bottom: 5px;
 }
 
+.chat-title {
+    font-family: "Sora", serif;
+}
+
 /* Media queries for dynamic font size */
 @media (max-width: 1200px) {
     .margin {
-        font-size: 0.7em; /* Reduced from 0.9em */
+        font-size: 0.7em;
+        /* Reduced from 0.9em */
     }
+
     .legend {
-        font-size: 0.5em; /* Reduced from 0.7em */
+        font-size: 0.5em;
+        /* Reduced from 0.7em */
     }
+
     .details {
-        font-size: 0.7em; /* Reduced from 0.9em */
+        font-size: 0.7em;
+        /* Reduced from 0.9em */
     }
 }
 
 @media (max-width: 992px) {
     .margin {
-        font-size: 0.6em; /* Reduced from 0.8em */
+        font-size: 0.6em;
+        /* Reduced from 0.8em */
     }
+
     .legend {
-        font-size: 0.4em; /* Reduced from 0.6em */
+        font-size: 0.4em;
+        /* Reduced from 0.6em */
     }
+
     .details {
-        font-size: 0.6em; /* Reduced from 0.8em */
+        font-size: 0.6em;
+        /* Reduced from 0.8em */
     }
 }
 
 @media (max-width: 768px) {
     .margin {
-        font-size: 0.5em; /* Reduced from 0.7em */
+        font-size: 0.5em;
+        /* Reduced from 0.7em */
     }
+
     .legend {
-        font-size: 0.3em; /* Reduced from 0.5em */
+        font-size: 0.3em;
+        /* Reduced from 0.5em */
     }
+
     .details {
-        font-size: 0.5em; /* Reduced from 0.7em */
+        font-size: 0.5em;
+        /* Reduced from 0.7em */
     }
 }
 
 @media (max-width: 576px) {
     .margin {
-        font-size: 0.4em; /* Reduced from 0.6em */
+        font-size: 0.4em;
+        /* Reduced from 0.6em */
     }
+
     .legend {
-        font-size: 0.2em; /* Reduced from 0.4em */
+        font-size: 0.2em;
+        /* Reduced from 0.4em */
     }
+
     .details {
         font-size: 0.6em;
     }
 }
-
-
