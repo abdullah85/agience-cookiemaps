@@ -247,7 +247,11 @@ canvas {
     flex-direction: column;
     gap: 50px;
     padding: 10px;
-    width: 18%;
+    width: 35%;
+    overflow-y: auto; /* Enable vertical scrolling */
+    max-height: 100vh; /* Ensure it does not exceed the viewport height */
+    transform: scale(var(--zoom-level, 1)); /* Dynamically adjust size with zoom */
+    transform-origin: top right; /* Ensure it scales from the top right corner */
 }
 
 .coin-card {
@@ -414,4 +418,12 @@ canvas {
     .details {
         font-size: 0.6em;
     }
+}
+
+.draw-tool {
+    position: absolute;
+    top: 0;
+    left: 0;
+    pointer-events: none; /* Ensure it doesn't interfere with mouse events */
+    z-index: 1000; /* Ensure it is above other elements */
 }
