@@ -102,6 +102,7 @@ canvas {
 .logo-text {
     font-size: 28px;
     margin: 0;
+    font-family: "Sora", serif;
     /* Remove default h1 margin */
 }
 
