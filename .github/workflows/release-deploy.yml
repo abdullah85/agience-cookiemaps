@@ -41,8 +41,10 @@ jobs:
           username: ${{ secrets.EC2_USER }}
           key: ${{ secrets.EC2_SSH_KEY }}
           script: |
+            cd /home/ec2-user/cookiemaps || exit 1
+            echo "${{ secrets.ENV_FILE }}" > .env
             aws ecr get-login-password --region ${{ secrets.AWS_REGION }} | docker login --username AWS --password-stdin ${{ secrets.AWS_ECR_REPO_URI }}
             docker pull ${{ secrets.AWS_ECR_REPO_URI }}:latest
             docker stop cookiemaps || true
             docker rm cookiemaps || true
-            docker run -d --name cookiemaps -p 8000:8000 ${{ secrets.AWS_ECR_REPO_URI }}:latest
+            docker run -d --name cookiemaps --env-file .env -p 8000:8000 ${{ secrets.AWS_ECR_REPO_URI }}:latest 
