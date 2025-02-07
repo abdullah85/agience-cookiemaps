@@ -71,7 +71,7 @@ def hello_world():
 
 @app.route('/data')
 def data():
-    print("Serving data:", cryptocurrencies)  # Log the data being served
+    #print("Serving data:", cryptocurrencies)  # Log the data being served
     return jsonify(cryptocurrencies)
 
 @app.route('/update', methods=['POST'])
