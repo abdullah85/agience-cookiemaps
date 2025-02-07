@@ -2,4 +2,3 @@ langchain
 openai
 python-dotenv
 langchain_community
-git+https://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@github.com/jaiswalraj03014/cookie_api_plugin.git
